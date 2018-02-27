@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../../../../Downloads/PRINCIPAL1.S
+SOURCEFILES_QUOTED_IF_SPACED=Ejemplo2.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Ejemplo2.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Ejemplo2.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o
+OBJECTFILES=${OBJECTDIR}/Ejemplo2.o
 
 # Source Files
-SOURCEFILES=../../../../Downloads/PRINCIPAL1.S
+SOURCEFILES=Ejemplo2.s
 
 
 CFLAGS=
@@ -100,27 +100,27 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/Ejemplo2.o: Ejemplo2.s  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Ejemplo2.o.d 
+	@${RM} ${OBJECTDIR}/Ejemplo2.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  Ejemplo2.s  -o ${OBJECTDIR}/Ejemplo2.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/Ejemplo2.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/Ejemplo2.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	
 else
+${OBJECTDIR}/Ejemplo2.o: Ejemplo2.s  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Ejemplo2.o.d 
+	@${RM} ${OBJECTDIR}/Ejemplo2.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  Ejemplo2.s  -o ${OBJECTDIR}/Ejemplo2.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/Ejemplo2.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/Ejemplo2.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	
 endif
 
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemblePreproc
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o: ../../../../Downloads/PRINCIPAL1.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/652369291" 
-	@${RM} ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d 
-	@${RM} ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  ../../../../Downloads/PRINCIPAL1.S  -o ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d"  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.asm.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
-	@${FIXDEPS} "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d" "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.asm.d"  -t $(SILENT)  -rsi ${MP_CC_DIR}../  
-	
 else
-${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o: ../../../../Downloads/PRINCIPAL1.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/652369291" 
-	@${RM} ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d 
-	@${RM} ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  ../../../../Downloads/PRINCIPAL1.S  -o ${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d"  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.asm.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
-	@${FIXDEPS} "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.d" "${OBJECTDIR}/_ext/652369291/PRINCIPAL1.o.asm.d"  -t $(SILENT)  -rsi ${MP_CC_DIR}../  
-	
 endif
 
 # ------------------------------------------------------------------------------------
