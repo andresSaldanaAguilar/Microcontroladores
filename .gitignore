@@ -24,3 +24,7 @@ disassembly/
 *.mk
 *.bash
 *.mk
+*.xml
+*.mk
+*.properties
+*.xml
