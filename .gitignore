@@ -20,3 +20,11 @@ funclist
 nbproject/Makefile-*
 disassembly/
 *.map
+*.xml
+*.mk
+*.bash
+*.mk
+*.xml
+*.mk
+*.properties
+*.xml

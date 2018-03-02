@@ -112,21 +112,27 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 CICLO:
-	INC W0 , WO
-	MOV WO,  PORTB
+	INC	W0,		W0
+	MOV	W0,		PORTB
 	NOP
 	CALL	RETARDO_1S
         GOTO    CICLO     
 ;Rutina que genera un retardo de un segundo
 RETARDO_1S:
+	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos líneas de código
+	PUSH	W1				    ;Guardado de valor de registros
+	MOV	#10,		W1
+CICLO2_1S:
 	CLR	W0
 CICLO_1S:
-	DEC	W0,		W0	    ; si pasa por la Alu por lo cual NZ se afecta
-					    ; El decremento hace que el 0 se convierta en 65536
+	DEC	W0,		W0		    ; si pasa por la Alu por lo cual NZ se afecta
 	BRA	NZ,		CICLO_1S
+	
+	DEC	W1,		W1
+	BRA	NZ,		CICLO2_1S	    ; El decremento hace que el 0 se convierta en 65536
+	POP	W1				    ; Recuperar valor del registro, es recomendable hacerlo
+	POP	W0
 	RETURN
-CICLO_10:
-	;Aquì nos quedamos
     
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
