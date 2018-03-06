@@ -111,22 +111,44 @@ __reset:
         CALL 	_WREG_INIT          	;SE LLAMA A LA RUTINA DE INICIALIZACION DE REGISTROS
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
-	
+PRENDER:
+	MOV	#0x0000,	W2
 	BSET	W0,		#0
+	MOV	W0,	PORTB
+	MOV	#0x0000,	W2
+	;MOV	#0x0001,	W1
 CICLO:
-	NOP
-	MOV	#0X000F,	W1
-	AND	W0	,W1	,W0
+	BTSC	PORTF,	#RF0		;Verifico si esta presionado el botón
+	XOR	#0x0001,	W2	;Si esta presionado hago un switch sobre W2 (que inicialmente es 0)
+	;BTSS	PORTF,	#RF0
+	;BSET	W2,	#0
 	
-	BTSC	PORTF,	#RF0
-	RLC	W0,	W0
-	BTSS	PORTF,	#RF0
-	RRC	W0,	W0
-	RRC	W0,	W0
+	BTSC	W2,	#RF0
+	CALL	CORRIMIENTO_DERECHA
+	
+	BTSS	W2,	#RF0
+	CALL	CORRIMIENTO_IZQUIERDA
+
 	MOV	W0,	PORTB	
 	NOP
 	CALL	RETARDO_1S
 	GOTO	CICLO
+CORRIMIENTO_IZQUIERDA:
+	SL	W0,	W0
+	CP	W0,	#0x0000
+	BRA	Z,	REINICIAR
+	RETURN
+CORRIMIENTO_DERECHA:
+	LSR	W0,	W0
+	CP	W0,	#0x0000
+	BRA	Z,	REINICIAR2
+	RETURN
+REINICIAR:
+	MOV	#0x0001,    W0
+	RETURN
+REINICIAR2:
+	MOV	#0x8000,    W0
+	RETURN
 ;Rutina que genera un retardo de un segundo
 RETARDO_1S:
 	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos líneas de código
