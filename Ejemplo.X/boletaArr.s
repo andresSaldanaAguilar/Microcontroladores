@@ -112,27 +112,119 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 CICLO:
-	INC	W0,		W0
-	MOV	W0,		PORTB
+	MOV PORTD,		W0
 	NOP
-	CALL	RETARDO_1S
-        GOTO    CICLO     
-;Rutina que genera un retardo de un segundo
-RETARDO_1S:
-	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos líneas de código
-	PUSH	W1				    ;Guardado de valor de registros
-	MOV	#10,		W1
-CICLO2_1S:
-	CLR	W0
-CICLO_1S:
-	DEC	W0,		W0		    ; si pasa por la Alu por lo cual NZ se afecta
-	BRA	NZ,		CICLO_1S
+	MOV #0X000F,		W1
+	AND	W0	,W1	,W0
 	
-	DEC	W1,		W1
-	BRA	NZ,		CICLO2_1S	    ; El decremento hace que el 0 se convierta en 65536
-	POP	W1				    ; Recuperar valor del registro, es recomendable hacerlo
-	POP	W0
-	RETURN
+	CALL CONV_CODIGO
+	MOV  W0,		PORTB
+	NOP
+	GOTO CICLO
+
+	/*BRIEF: REALIZA UN CONEVRTIDOR DE CODIGO 
+	PARAM: W0, VALOR A CONVERTIR */
+CONV_CODIGO:
+	BRA		    W0	;HACE UN SALTO DEL TAMAÑO DEL NUMERO EN EL REGISTRO W0
+	RETLW	     #0X6D, W0	;DIGITO_0 GUARDA EN WO EL NUMERO ESPECIFICADO
+	RETLW	     #0X7E, W0	;DIGITO_1
+	RETLW	     #0X30, W0	;DIGITO_2
+	RETLW	     #0X5F, W0	;DIGITO_3
+	RETLW	     #0X5F, W0	;DIGITO_4
+	RETLW	     #0X79, W0	;DIGITO_5
+	RETLW	     #0X7E, W0	;DIGITO_6
+	RETLW	     #0X79, W0	;DIGITO_7
+	RETLW	     #0X5B, W0	;DIGITO_8
+	RETLW	     #0X70, W0	;DIGITO_9
+
+	RETURN	    
+    
+    
+;	CP	W0	,#0
+;	BRA	Z,	DIGITO_0
+;	CP	W0	,#1
+;	BRA	Z,	DIGITO_1
+;	CP	W0	,#2
+;	BRA	Z,	DIGITO_2
+;	CP	W0	,#3
+;	BRA	Z,	DIGITO_3
+;	CP	W0	,#4
+;	BRA	Z,	DIGITO_4
+;	CP	W0	,#5
+;	BRA	Z,	DIGITO_5
+;	CP	W0	,#6
+;	BRA	Z,	DIGITO_6
+;	CP	W0	,#7
+;	BRA	Z,	DIGITO_7
+;	CP	W0	,#8
+;	BRA	Z,	DIGITO_8
+;	CP	W0	,#9
+;	BRA	Z,	DIGITO_9	
+;	
+;	
+;
+;DIGITO_0:
+;	MOV #0X6D, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_1:
+;	MOV #0X7E, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_2:
+;	MOV #0X30, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_3:
+;	MOV #0X5F, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_4:
+;	MOV #0X5F, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_5:
+;	MOV #0X79, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_6:
+;	MOV #0X7E, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_7:
+;	MOV #0X79, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_8:
+;	MOV #0X5B, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_9:
+;	MOV #0X70, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+
+
+	;Aquì nos quedamos
     
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
@@ -196,6 +288,9 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
+
+
+
 
 
 

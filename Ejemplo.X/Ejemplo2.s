@@ -1,6 +1,11 @@
-    ;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
-; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
+;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
+; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH. AL VALOR LEIDO 
+; * SE LE APLICA LA OPERACIÓN: 
+; * IF( RF0 = 1 )
+; *	PORTB(3...0) = PORTD(3...0) + 5
+; * ELSE	
+; *	PORTB(3...0) = PORTD(3...0) - 5	
+; * EN EL PUERTO B (RB3, RB2, RB1, RB0) SE TIENEN CONECTADOS LEDS
 ; * PARA VISUALIZAR LA SALIDA
 ; * @device: DSPIC30F4013
 ; */
@@ -18,7 +23,7 @@
 ;..............................................................................
         config __FOSC, CSW_FSCM_OFF & FRC   
 ;..............................................................................
-;SE DESACTIVA EL WATCHDOG, SIN USO
+;SE DESACTIVA EL WATCHDOG
 ;..............................................................................
         config __FWDT, WDT_OFF 
 ;..............................................................................
@@ -112,22 +117,58 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 CICLO:
-	MOV	PORTD,		W0
-        NOP
-	MOV	#0X00F,		W1
-	AND	W0,		W1,	W0
-	ADD	#5,		W0	;Sumamos 5 a W0 
-	BTSS	PORTF,		#RF0	;Verificamos que el bit 0 de RF sea 0 (si es uno, entonces se salta una linea) 
-	SUB	#10,		W0	;Restamos 10 a W0
+    	MOV	PORTD,		W0
+	NOP
+	AND	#0X00F,		W0  ;limpiando el resto del registro
+	
+	GOTO    MULTIPLICACION
+	;MOV	PORTF,		W3  ;leyendo el registro 3
+	;NOP
+	;CP	W3	,#0
+	;BRA	Z,	SUMA
+	;CP	W3	,#1
+	;BRA	Z,	RESTA
+	;CP	W3	,#2
+	;BRA	Z,	MULTIPLICACION
+	;CP	W3	,#3
+	;BRA	Z,	DIVISION
+	GOTO	CICLO
+;	
+;	BRA			W3
+;	GOTO	MULTIPLICACION
+;	GOTO	DIVISION	
+	
+	
+RESTA:
+	SUB	#0X005,		W0
 	MOV	W0,		PORTB
 	NOP
-        GOTO    CICLO     
-RESTA:					; esto es una etiqueta
-	SUB	#5,		W0	;Restamos 5 a W0
-	MOV	W0,		PORTB	;Asignamos W0 a PORTB
+	
+	GOTO	CICLO
+SUMA:
+	ADD	#0X005,		W0
+	MOV	W0,		PORTB
 	NOP
 	GOTO	CICLO
-    
+	
+DIVISION:
+	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
+	NOP
+	DIV.S	W0,		W1;divide entre cinco y guarda en w0
+	MOV	W0,		PORTB
+	NOP
+	GOTO	CICLO
+	
+MULTIPLICACION:
+	MOV	#0X002,		W1 ;carga el valor cinco al registro uno
+	NOP
+	AND	#0X000,		W2 ;limpia el registro dos
+	NOP
+	MUL.SS	W1,		W0,		W2 ;multiplica y guarda en w2
+	MOV	W2,		PORTB
+	NOP
+	GOTO	CICLO
+
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
 ; * RD0 - ENTRADA, DIPSWITCH 0 
@@ -139,13 +180,16 @@ RESTA:					; esto es una etiqueta
 ; * RB1 - SALIDA, LED 1 
 ; * RB2 - SALIDA, LED 2 
 ; * RB3 - SALIDA, LED 3 
+; * PORTF: 
+; * RF0 - ENTRADA, PUSH BUTTON 
 ; */
 INI_PERIFERICOS:
 	CLR	PORTD
 	NOP
 	CLR	LATD
 	NOP
-	SETM	TRISD
+	MOV	#0X000F,	W0
+	MOV	W0,		TRISD
 	NOP
 	
 	CLR	PORTB
@@ -154,13 +198,16 @@ INI_PERIFERICOS:
 	NOP
 	CLR	TRISB
 	NOP
-	SETM	ADPCFG	;PUERTO DIGITAL
-	NOP
+	SETM	ADPCFG
+
 	CLR	PORTF
 	NOP
 	CLR	LATF
 	NOP
-	BSET	TRISF, #TRISF0
+	CLR	TRISF
+	NOP
+	BSET	TRISF,	    #TRISF0
+	NOP
 	
         RETURN
 
@@ -190,10 +237,6 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
-
-
-
-
 
 
 

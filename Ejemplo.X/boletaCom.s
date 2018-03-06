@@ -136,7 +136,9 @@ CICLO:
 	CP	W0	,#8
 	BRA	Z,	DIGITO_8
 	CP	W0	,#9
-	BRA	Z,	DIGITO_9	
+	BRA	Z,	DIGITO_9
+	
+	GOTO CICLO
 	
 	
 
@@ -265,18 +267,3 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
