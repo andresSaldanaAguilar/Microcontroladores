@@ -1,11 +1,6 @@
 ;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH. AL VALOR LEIDO 
-; * SE LE APLICA LA OPERACIÓN: 
-; * IF( RF0 = 1 )
-; *	PORTB(3...0) = PORTD(3...0) + 5
-; * ELSE	
-; *	PORTB(3...0) = PORTD(3...0) - 5	
-; * EN EL PUERTO B (RB3, RB2, RB1, RB0) SE TIENEN CONECTADOS LEDS
+; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
+; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
 ; * PARA VISUALIZAR LA SALIDA
 ; * @device: DSPIC30F4013
 ; */
@@ -23,7 +18,7 @@
 ;..............................................................................
         config __FOSC, CSW_FSCM_OFF & FRC   
 ;..............................................................................
-;SE DESACTIVA EL WATCHDOG
+;SE DESACTIVA EL WATCHDOG, SIN USO
 ;..............................................................................
         config __FWDT, WDT_OFF 
 ;..............................................................................
@@ -77,6 +72,9 @@
 
 ps_coeff:
         .hword   0x0002, 0x0003, 0x0005, 0x000A
+	
+BOLETA:
+	.byte 0X6D,0X7E,0X30,0X12,0 ;arreglo inicializacion
 
 ;******************************************************************************
 ;VARIABLES NO INICIALIZADAS EN EL ESPACIO X DE LA MEMORIA DE DATOS
@@ -117,52 +115,28 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 CICLO:
-    	MOV	PORTD,		W0
-	NOP
-	AND	#0X00F,		W0  ;limpiando el resto del registro
-
-	MOV	PORTF,		W3  ;leyendo el registro 3
-	NOP
-	CP	W3	,#0
-	BRA	Z,	SUMA
-	CP	W3	,#1
-	BRA	Z,	RESTA
-	CP	W3	,#2
-	BRA	Z,	MULTIPLICACION
-	CP	W3	,#3
-	BRA	Z,	DIVISION
-	GOTO	CICLO	
+	MOV	#tblpage(BOLETA),   W0 ;traer la pagina del arreglo, su parte alta y la coloca en tblpage
+	MOV	w0, TBLPAG
+	MOV	#tbloffset(BOLETA), W1
 	
-RESTA:
-	SUB	#0X005,		W0
 	MOV	W0,		PORTB
-	NOP
-	
-	GOTO	CICLO
-SUMA:
-	ADD	#0X005,		W0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-DIVISION:
-	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
-	NOP
-	DIV.S	W0,		W1;divide entre cinco y guarda en w0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-MULTIPLICACION:
-	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
-	NOP
-	AND	#0X000,		W2 ;limpia el registro dos
-	NOP
-	MUL.SS	W1,		W0,		W2 ;multiplica y guarda en w2
-	MOV	W2,		PORTB
 	NOP
 	GOTO	CICLO
 
+	/*BRIEF: REALIZA UN CONEVRTIDOR DE CODIGO 
+	PARAM: W0, VALOR A CONVERTIR */
+CONV_CODIGO:
+	BRA		    W0	;HACE UN SALTO DEL TAMAÑO DEL NUMERO EN EL REGISTRO W0
+	RETLW	     #0X6D, W0	;DIGITO_0 GUARDA EN WO EL NUMERO ESPECIFICADO
+	RETLW	     #0X7E, W0	;DIGITO_1
+	RETLW	     #0X30, W0	;DIGITO_2
+	;...CONTINUARA
+	RETURN	    
+    
+    
+
+	;Aquì nos quedamos
+    
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
 ; * RD0 - ENTRADA, DIPSWITCH 0 
@@ -174,36 +148,28 @@ MULTIPLICACION:
 ; * RB1 - SALIDA, LED 1 
 ; * RB2 - SALIDA, LED 2 
 ; * RB3 - SALIDA, LED 3 
-; * PORTF: 
-; * RF0 - ENTRADA, PUSH BUTTON 
 ; */
 INI_PERIFERICOS:
 	CLR	PORTD
 	NOP
 	CLR	LATD
 	NOP
-	MOV	#0X000F,	W0
-	MOV	W0,		TRISD ;configurando como entradas solo los necesarios
+	SETM	TRISD
 	NOP
 	
 	CLR	PORTB
 	NOP
 	CLR	LATB
 	NOP
-	CLR	TRISB	;configurando como salidas
+	CLR	TRISB
 	NOP
-	SETM	ADPCFG
-
+	SETM	ADPCFG	;PUERTO DIGITAL
+	NOP
 	CLR	PORTF
 	NOP
 	CLR	LATF
 	NOP
-	CLR	TRISF
-	NOP
-	BSET	TRISF,	    #TRISF0 ;configurando entradas de las operaciones
-	NOP
-	BSET	TRISF,	    #TRISF1
-	NOP
+	BSET	TRISF, #TRISF0
 	
         RETURN
 
@@ -233,6 +199,19 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

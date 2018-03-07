@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=boletaArr.s
+SOURCEFILES_QUOTED_IF_SPACED=boleta3.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/boletaArr.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/boletaArr.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/boleta3.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/boleta3.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/boletaArr.o
+OBJECTFILES=${OBJECTDIR}/boleta3.o
 
 # Source Files
-SOURCEFILES=boletaArr.s
+SOURCEFILES=boleta3.s
 
 
 CFLAGS=
@@ -100,20 +100,20 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/boletaArr.o: boletaArr.s  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/boleta3.o: boleta3.s  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/boletaArr.o.d 
-	@${RM} ${OBJECTDIR}/boletaArr.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  boletaArr.s  -o ${OBJECTDIR}/boletaArr.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/boletaArr.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
-	@${FIXDEPS} "${OBJECTDIR}/boletaArr.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	@${RM} ${OBJECTDIR}/boleta3.o.d 
+	@${RM} ${OBJECTDIR}/boleta3.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  boleta3.s  -o ${OBJECTDIR}/boleta3.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/boleta3.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/boleta3.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
 	
 else
-${OBJECTDIR}/boletaArr.o: boletaArr.s  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/boleta3.o: boleta3.s  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/boletaArr.o.d 
-	@${RM} ${OBJECTDIR}/boletaArr.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  boletaArr.s  -o ${OBJECTDIR}/boletaArr.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/boletaArr.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
-	@${FIXDEPS} "${OBJECTDIR}/boletaArr.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	@${RM} ${OBJECTDIR}/boleta3.o.d 
+	@${RM} ${OBJECTDIR}/boleta3.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  boleta3.s  -o ${OBJECTDIR}/boleta3.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/boleta3.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/boleta3.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
 	
 endif
 

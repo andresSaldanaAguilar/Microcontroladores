@@ -77,6 +77,8 @@
 
 ps_coeff:
         .hword   0x0002, 0x0003, 0x0005, 0x000A
+BOLETA:
+	.byte 0X6D,0X7E,0X30,0X5F,0X5F,0X79,0X7E,0X79,0X5B,0X70,0 ;arreglo, inicializacion
 
 ;******************************************************************************
 ;VARIABLES NO INICIALIZADAS EN EL ESPACIO X DE LA MEMORIA DE DATOS
@@ -116,52 +118,38 @@ __reset:
         CALL 	_WREG_INIT          	;SE LLAMA A LA RUTINA DE INICIALIZACION DE REGISTROS
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
+;memoria del prigrama
+	BSET	CORCON,		    #PSV ;activando la funcion psv, ya podemos usar moves
+    	MOV	#psvpage(BOLETA),   W0
+	MOV	W0,		    PSVPAG
 CICLO:
-    	MOV	PORTD,		W0
+	MOV	#psvoffset(BOLETA), W1 ;leemos byte en byte el arreglo
+LEER:
+	MOV.B [W1++],	    W0
+	CP0.B	W0 ;compare es una resta 
+	BRA	Z,		    CICLO
+		
+	MOV.B	WREG,		    PORTB
 	NOP
-	AND	#0X00F,		W0  ;limpiando el resto del registro
-
-	MOV	PORTF,		W3  ;leyendo el registro 3
-	NOP
-	CP	W3	,#0
-	BRA	Z,	SUMA
-	CP	W3	,#1
-	BRA	Z,	RESTA
-	CP	W3	,#2
-	BRA	Z,	MULTIPLICACION
-	CP	W3	,#3
-	BRA	Z,	DIVISION
-	GOTO	CICLO	
+	;CALL RETARDO_1S
+	GOTO	LEER
 	
-RESTA:
-	SUB	#0X005,		W0
-	MOV	W0,		PORTB
-	NOP
+;Rutina que genera un retardo de un segundo
+RETARDO_1S:
+	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos l?neas de c?digo
+	PUSH	W1				    ;Guardado de valor de registros
+	MOV	#1,		W1
+CICLO2_1S:
+	CLR	W0
+CICLO_1S:
+	DEC	W0,		W0		    ; si pasa por la Alu por lo cual NZ se afecta
+	BRA	NZ,		CICLO_1S
 	
-	GOTO	CICLO
-SUMA:
-	ADD	#0X005,		W0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-DIVISION:
-	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
-	NOP
-	DIV.S	W0,		W1;divide entre cinco y guarda en w0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-MULTIPLICACION:
-	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
-	NOP
-	AND	#0X000,		W2 ;limpia el registro dos
-	NOP
-	MUL.SS	W1,		W0,		W2 ;multiplica y guarda en w2
-	MOV	W2,		PORTB
-	NOP
-	GOTO	CICLO
+	DEC	W1,		W1
+	BRA	NZ,		CICLO2_1S	    ; El decremento hace que el 0 se convierta en 65536
+	POP	W1				    ; Recuperar valor del registro, es recomendable hacerlo
+	POP	W0
+	RETURN
 
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
@@ -183,14 +171,14 @@ INI_PERIFERICOS:
 	CLR	LATD
 	NOP
 	MOV	#0X000F,	W0
-	MOV	W0,		TRISD ;configurando como entradas solo los necesarios
+	MOV	W0,		TRISD
 	NOP
 	
 	CLR	PORTB
 	NOP
 	CLR	LATB
 	NOP
-	CLR	TRISB	;configurando como salidas
+	CLR	TRISB
 	NOP
 	SETM	ADPCFG
 
@@ -200,9 +188,7 @@ INI_PERIFERICOS:
 	NOP
 	CLR	TRISF
 	NOP
-	BSET	TRISF,	    #TRISF0 ;configurando entradas de las operaciones
-	NOP
-	BSET	TRISF,	    #TRISF1
+	BSET	TRISF,	    #TRISF0
 	NOP
 	
         RETURN
@@ -233,6 +219,9 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
+
+
+
 
 
 
