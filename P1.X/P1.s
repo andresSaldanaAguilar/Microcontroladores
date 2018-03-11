@@ -112,10 +112,10 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 PRENDER:
-	MOV	#0x0000,	W2
+	;MOV	#0x0000,	W2
 	BSET	W0,		#0
 	MOV	W0,	PORTB
-	MOV	#0x0000,	W2
+	MOV	#0,	W2
 	;MOV	#0x0001,	W1
 CICLO:
 	BTSC	PORTF,	#RF0		;Verifico si esta presionado el botón
@@ -153,7 +153,7 @@ REINICIAR2:
 RETARDO_1S:
 	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos líneas de código
 	PUSH	W1				    ;Guardado de valor de registros
-	MOV	#1,		W1
+	MOV	#5,		W1
 CICLO2_1S:
 	CLR	W0
 CICLO_1S:
