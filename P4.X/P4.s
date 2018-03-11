@@ -1,6 +1,11 @@
 ;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
-; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
+; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH. AL VALOR LEIDO 
+; * SE LE APLICA LA OPERACIÓN: 
+; * IF( RF0 = 1 )
+; *	PORTB(3...0) = PORTD(3...0) + 5
+; * ELSE	
+; *	PORTB(3...0) = PORTD(3...0) - 5	
+; * EN EL PUERTO B (RB3, RB2, RB1, RB0) SE TIENEN CONECTADOS LEDS
 ; * PARA VISUALIZAR LA SALIDA
 ; * @device: DSPIC30F4013
 ; */
@@ -18,7 +23,7 @@
 ;..............................................................................
         config __FOSC, CSW_FSCM_OFF & FRC   
 ;..............................................................................
-;SE DESACTIVA EL WATCHDOG, SIN USO
+;SE DESACTIVA EL WATCHDOG
 ;..............................................................................
         config __FWDT, WDT_OFF 
 ;..............................................................................
@@ -72,6 +77,8 @@
 
 ps_coeff:
         .hword   0x0002, 0x0003, 0x0005, 0x000A
+BOLETA:
+	.byte 0X6D,0X7E,0X30,0X5F,0X5F,0X79,0X7E,0X79,0X5B,0X70,0 ;arreglo, inicializacion
 
 ;******************************************************************************
 ;VARIABLES NO INICIALIZADAS EN EL ESPACIO X DE LA MEMORIA DE DATOS
@@ -111,47 +118,72 @@ __reset:
         CALL 	_WREG_INIT          	;SE LLAMA A LA RUTINA DE INICIALIZACION DE REGISTROS
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
-PRENDER:
-	;MOV	#0x0000,	W2
-	BSET	W0,		#0
-	MOV	W0,	PORTB
-	CLR	W2
-	;MOV	#0x0001,	W1
+	
+	;MOV	#0,		    W3 ;estado
+	CLR	W3
+	
+;memoria del programa
 CICLO:
-	BTSC	PORTF,	#RF0		;Verifico si esta presionado el botón
-	XOR	#0x0001,	W2	;Si esta presionado hago un switch sobre W2 (que inicialmente es 0)
-	;BTSS	PORTF,	#RF0
-	;BSET	W2,	#0
-	
-	BTSC	W2,	#0
-	CALL	CORRIMIENTO_DERECHA
-	
-	BTSS	W2,	#0
-	CALL	CORRIMIENTO_IZQUIERDA
-
-	MOV	W0,	PORTB	
+    	MOV	#tblpage(BOLETA),   W0
+	MOV	W0,		    TBLPAG
+	MOV	#tbloffset(BOLETA), W1 ;leemos byte en byte el arreglo
+	GOTO	LEER
+CICLO2:
+	MOV	#tblpage(BOLETA),   W0
+	MOV	W0,		    TBLPAG
+	MOV	#tbloffset(BOLETA+10), W1 ;leemos byte en byte el arreglo 
+				    ;Aquí esta bien truqueado
+LEER:
+	MOV	PORTF,		W2 ;cargamos lo que este en el push button
 	NOP
-	CALL	RETARDO_1S
-	GOTO	CICLO
-CORRIMIENTO_IZQUIERDA:
-	SL	W0,	W0
-	CP	W0,	#0x0000
-	BRA	Z,	REINICIAR
-	RETURN
-CORRIMIENTO_DERECHA:
-	LSR	W0,	W0
-	CP	W0,	#0x0000
-	BRA	Z,	REINICIAR2
-	RETURN
-REINICIAR:
-	MOV	#0x0001,    W0
-	RETURN
-REINICIAR2:
-	MOV	#0x8000,    W0
-	RETURN
+	
+	;CP	W2	,#1
+	;BRA	Z,	ESTADO	;si el estado del push es uno, entonces procedemos a cambiar de rotacion
+	BTSC	W2,	#0		;Verifico si esta presionado el botón
+	XOR	#0x0001,	W3	;Si esta presionado hago un switch sobre W3 (que inicialmente es 0)
+	
+	CP	W3	,#0
+	BRA	Z,	DERECHA	;si estado = 0, hacia la derecha
+	CP	W3	,#1
+	BRA	Z,	IZQUIERDA	;si estado = 1, hacia la izquierda
+	
+
+DERECHA:	
+	CLR	W4		    ;Variable que sirve para saber si venimos de la derecha o no
+	TBLRDL.B [W1++],	    W0
+	CP0.B	W0 ;compare es una resta (aquí comparamos si es igual a 0)
+	BRA	Z,		    CICLO
+		
+	MOV.B	WREG,		    PORTB
+	NOP
+	CALL RETARDO_1S
+	GOTO	LEER
+	
+IZQUIERDA:	
+	TBLRDL.B [--W1],	    W0	    ;Retrocedemos el apuntador en 1 por el último incremento hecho en derecha
+	BTSS	W4,	#0		    ;Si es cero, ejecuta la siguiente instrucción, esto es para cuando viene de derecha
+	TBLRDL.B [--W1],	    W0	    ;Obtenemos ahora si el valor anterior al que tiene W0 actualmente
+	MOV	#1,	W4
+	CP0.B	W0 ;compare es una resta 
+	BRA	Z,		    CICLO2
+		
+	MOV.B	WREG,		    PORTB
+	NOP
+	CALL RETARDO_1S
+	GOTO	LEER
+	
+ESTADO:
+	BTSS	W3	,#0 ;si vale uno, no sumamos
+	INC	W3	,W3	
+	NOP
+	BTSC	W3	,#0 ;si vale cero, no restamos
+	DEC	W3	,W3
+	NOP
+	GOTO	LEER
+
 ;Rutina que genera un retardo de un segundo
 RETARDO_1S:
-	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos líneas de código
+	PUSH	W0				    ;PUSH.D W0 Es equivalente a estas dos l?neas de c?digo
 	PUSH	W1				    ;Guardado de valor de registros
 	MOV	#5,		W1
 CICLO2_1S:
@@ -165,8 +197,7 @@ CICLO_1S:
 	POP	W1				    ; Recuperar valor del registro, es recomendable hacerlo
 	POP	W0
 	RETURN	
-	
-	    
+
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
 ; * RD0 - ENTRADA, DIPSWITCH 0 
@@ -178,14 +209,17 @@ CICLO_1S:
 ; * RB1 - SALIDA, LED 1 
 ; * RB2 - SALIDA, LED 2 
 ; * RB3 - SALIDA, LED 3 
+; * PORTF: 
+; * RF0 - ENTRADA, PUSH BUTTON 
 ; */
 INI_PERIFERICOS:
-	CLR	PORTD
-	NOP
-	CLR	LATD
-	NOP
-	SETM	TRISD
-	NOP
+;	CLR	PORTD
+;	NOP
+;	CLR	LATD
+;	NOP
+;	MOV	#0X000F,	W0
+;	MOV	W0,		TRISD
+;	NOP
 	
 	CLR	PORTB
 	NOP
@@ -193,13 +227,16 @@ INI_PERIFERICOS:
 	NOP
 	CLR	TRISB
 	NOP
-	SETM	ADPCFG	;PUERTO DIGITAL
-	NOP
+	SETM	ADPCFG
+
 	CLR	PORTF
 	NOP
 	CLR	LATF
 	NOP
-	BSET	TRISF, #TRISF0
+	CLR	TRISF
+	NOP
+	BSET	TRISF,	    #TRISF0
+	NOP
 	
         RETURN
 
@@ -229,13 +266,6 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
-
-
-
-
-
-
-
 
 
 
