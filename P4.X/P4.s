@@ -139,7 +139,7 @@ LEER:
 	
 	;CP	W2	,#1
 	;BRA	Z,	ESTADO	;si el estado del push es uno, entonces procedemos a cambiar de rotacion
-	BTSC	W2,	#0		;Verifico si esta presionado el botón
+	BTSS	W2,	#0		;Verifico si esta presionado el botón (la entrada es 0 si esta presionado)
 	XOR	#0x0001,	W3	;Si esta presionado hago un switch sobre W3 (que inicialmente es 0)
 	
 	CP	W3	,#0

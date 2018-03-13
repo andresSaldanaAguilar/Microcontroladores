@@ -118,7 +118,8 @@ PRENDER:
 	CLR	W2
 	;MOV	#0x0001,	W1
 CICLO:
-	BTSC	PORTF,	#RF0		;Verifico si esta presionado el botón
+	BTSS	PORTF,	#RF0		;Verifico si esta presionado el botón (cuando esta presionado la entrada es 0)
+					;Esta instrucción se salta la siguiente instrucción si el bit es 1
 	XOR	#0x0001,	W2	;Si esta presionado hago un switch sobre W2 (que inicialmente es 0)
 	;BTSS	PORTF,	#RF0
 	;BSET	W2,	#0
