@@ -1,11 +1,6 @@
 ;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH. AL VALOR LEIDO 
-; * SE LE APLICA LA OPERACIÓN: 
-; * IF( RF0 = 1 )
-; *	PORTB(3...0) = PORTD(3...0) + 5
-; * ELSE	
-; *	PORTB(3...0) = PORTD(3...0) - 5	
-; * EN EL PUERTO B (RB3, RB2, RB1, RB0) SE TIENEN CONECTADOS LEDS
+; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
+; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
 ; * PARA VISUALIZAR LA SALIDA
 ; * @device: DSPIC30F4013
 ; */
@@ -23,7 +18,7 @@
 ;..............................................................................
         config __FOSC, CSW_FSCM_OFF & FRC   
 ;..............................................................................
-;SE DESACTIVA EL WATCHDOG
+;SE DESACTIVA EL WATCHDOG, SIN USO
 ;..............................................................................
         config __FWDT, WDT_OFF 
 ;..............................................................................
@@ -77,8 +72,6 @@
 
 ps_coeff:
         .hword   0x0002, 0x0003, 0x0005, 0x000A
-BOLETA:
-	.byte 0X6D,0X7E,0X30,0X5F,0X5F,0X79,0X7E,0X79,0X5B,0X70,0 ;arreglo, inicializacion
 
 ;******************************************************************************
 ;VARIABLES NO INICIALIZADAS EN EL ESPACIO X DE LA MEMORIA DE DATOS
@@ -118,35 +111,124 @@ __reset:
         CALL 	_WREG_INIT          	;SE LLAMA A LA RUTINA DE INICIALIZACION DE REGISTROS
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
-;memoria del prigrama
-	BSET	CORCON,		    #PSV ;activando la funcion psv, ya podemos usar moves
-    	MOV	#psvpage(BOLETA),   W0
-	MOV	W0,		    PSVPAG
 CICLO:
-	MOV	#psvoffset(BOLETA), W1 ;leemos byte en byte el arreglo
-LEER:
-	MOV.B   [W1++],		    W0
-	CP0.B	W0 ;compare es una resta 
-	BRA	Z,		    CICLO
-		
-	MOV.B	WREG,		    PORTB
+	MOV PORTD,		W0
 	NOP
-	;CALL RETARDO_1S /****todos estos generan un retardo de un segundo***/
-	;CALL RETARDO_1S
-	;CALL RETARDO_1S
-	;CALL RETARDO_1S
-	;CALL RETARDO_1S	 
-	GOTO	LEER
+	MOV #0X000F,		W1
+	AND	W0	,W1	,W0
 	
-;Rutina que genera un retardo de un segundo
-RETARDO_1S:
-	CLR W2
+	CALL CONV_CODIGO
+	MOV  W0,		PORTB
 	NOP
-	CICLO_1S:
-	    DEC W2,w2
-	    BRA NZ,CICLO_1S
-	RETURN
+	GOTO CICLO
 
+	/*BRIEF: REALIZA UN CONEVRTIDOR DE CODIGO 
+	PARAM: W0, VALOR A CONVERTIR */
+	
+	.global _CONV_CODIGO
+	
+_CONV_CODIGO:
+	BRA		    W0	;HACE UN SALTO DEL TAMAÑO DEL NUMERO EN EL REGISTRO W0
+	RETLW	     #0X6D, W0	;DIGITO_0 GUARDA EN WO EL NUMERO ESPECIFICADO
+	RETLW	     #0X7E, W0	;DIGITO_1
+	RETLW	     #0X30, W0	;DIGITO_2
+	RETLW	     #0X5F, W0	;DIGITO_3
+	RETLW	     #0X5F, W0	;DIGITO_4
+	RETLW	     #0X79, W0	;DIGITO_5
+	RETLW	     #0X7E, W0	;DIGITO_6
+	RETLW	     #0X79, W0	;DIGITO_7
+	RETLW	     #0X5B, W0	;DIGITO_8
+	RETLW	     #0X70, W0	;DIGITO_9
+
+	RETURN	    
+    
+    
+;	CP	W0	,#0
+;	BRA	Z,	DIGITO_0
+;	CP	W0	,#1
+;	BRA	Z,	DIGITO_1
+;	CP	W0	,#2
+;	BRA	Z,	DIGITO_2
+;	CP	W0	,#3
+;	BRA	Z,	DIGITO_3
+;	CP	W0	,#4
+;	BRA	Z,	DIGITO_4
+;	CP	W0	,#5
+;	BRA	Z,	DIGITO_5
+;	CP	W0	,#6
+;	BRA	Z,	DIGITO_6
+;	CP	W0	,#7
+;	BRA	Z,	DIGITO_7
+;	CP	W0	,#8
+;	BRA	Z,	DIGITO_8
+;	CP	W0	,#9
+;	BRA	Z,	DIGITO_9	
+;	
+;	
+;
+;DIGITO_0:
+;	MOV #0X6D, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_1:
+;	MOV #0X7E, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_2:
+;	MOV #0X30, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_3:
+;	MOV #0X5F, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_4:
+;	MOV #0X5F, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_5:
+;	MOV #0X79, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_6:
+;	MOV #0X7E, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_7:
+;	MOV #0X79, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_8:
+;	MOV #0X5B, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+;	
+;DIGITO_9:
+;	MOV #0X70, W0
+;	MOV W0, PORTB
+;	NOP
+;	GOTO CICLO
+
+
+	;Aquì nos quedamos
+    
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
 ; * RD0 - ENTRADA, DIPSWITCH 0 
@@ -158,16 +240,13 @@ RETARDO_1S:
 ; * RB1 - SALIDA, LED 1 
 ; * RB2 - SALIDA, LED 2 
 ; * RB3 - SALIDA, LED 3 
-; * PORTF: 
-; * RF0 - ENTRADA, PUSH BUTTON 
 ; */
 INI_PERIFERICOS:
 	CLR	PORTD
 	NOP
 	CLR	LATD
 	NOP
-	MOV	#0X000F,	W0
-	MOV	W0,		TRISD
+	SETM	TRISD
 	NOP
 	
 	CLR	PORTB
@@ -176,16 +255,13 @@ INI_PERIFERICOS:
 	NOP
 	CLR	TRISB
 	NOP
-	SETM	ADPCFG
-
+	SETM	ADPCFG	;PUERTO DIGITAL
+	NOP
 	CLR	PORTF
 	NOP
 	CLR	LATF
 	NOP
-	CLR	TRISF
-	NOP
-	BSET	TRISF,	    #TRISF0
-	NOP
+	BSET	TRISF, #TRISF0
 	
         RETURN
 
@@ -215,6 +291,13 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
+
+
+
+
+
+
+
 
 
 

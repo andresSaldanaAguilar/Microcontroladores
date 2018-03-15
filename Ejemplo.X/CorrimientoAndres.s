@@ -120,6 +120,7 @@ __reset:
 CICLO:	
 	MOV	W0,	    PORTB
 	NOP
+	CALL	RETARDO1S
 	BTSC	PORTF,	#RF0 ;skip if clear
 	CALL	ESTADO1
 
@@ -127,7 +128,6 @@ CICLO:
 	BRA	Z,	    DERECHA
 	CP	W1,	    #0X0001
 	BRA	Z,	    IZQUIERDA
-	;CALL	RETARDO1S
 	GOTO	CICLO
 	
 ESTADO1:
@@ -168,7 +168,7 @@ IZQUIERDA:
 ;cuando alcanzamos el maximo,regresamos al inicio
 RESET0:
 	CLR	W0 ;limpiamos por si lsa moscas
-	;CALL	RETARDO1S
+	CALL	RETARDO1S
 	BSET	W0,		#0 ;enpezamos denuevo en uno
 	GOTO	CICLO
 	

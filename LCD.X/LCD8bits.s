@@ -1,11 +1,6 @@
 ;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH. AL VALOR LEIDO 
-; * SE LE APLICA LA OPERACI?N: 
-; * IF( RF0 = 1 )
-; *	PORTB(3...0) = PORTD(3...0) + 5
-; * ELSE	
-; *	PORTB(3...0) = PORTD(3...0) - 5	
-; * EN EL PUERTO B (RB3, RB2, RB1, RB0) SE TIENEN CONECTADOS LEDS
+; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
+; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
 ; * PARA VISUALIZAR LA SALIDA
 ; * @device: DSPIC30F4013
 ; */
@@ -117,54 +112,13 @@ __reset:
                                   	;OPCIONALMENTE USAR RCALL EN LUGAR DE CALL
         CALL    INI_PERIFERICOS
 CICLO:
-    	MOV	PORTD,		W0
-	NOP
-	AND	#0X00F,		W0  ;limpiando el resto del registro
-
-	MOV	PORTF,		W3  ;leyendo el registro 3
-	NOP
-	CP	W3	,#0
-	BRA	Z,	SUMA
-	CP	W3	,#1
-	BRA	Z,	RESTA
-	CP	W3	,#2
-	BRA	Z,	MULTIPLICACION
-	CP	W3	,#3
-	BRA	Z,	DIVISION
-	GOTO	CICLO	
-	
-RESTA:
-	SUB	#0X005,		W0
+	MOV	PORTD,		W0
+        NOP
+	AND	#0X00F,		W0
 	MOV	W0,		PORTB
 	NOP
-	
-	GOTO	CICLO
-SUMA:
-	ADD	#0X005,		W0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-DIVISION:
-	CLR	W1
-	MOV	#0X005,		W2 ;carga el valor cinco al registro uno
-	NOP
-	DISI	#18		    ;inhabilita las interrupciones en la operacion de division por 19 ciclos
-	REPEAT  #17		    ;Los 18 ciclos de reloj que la division necesita
-	DIV.U	W0,		W2  ;divide entre cinco y guarda en w0
-	MOV	W0,		PORTB
-	NOP
-	GOTO	CICLO
-	
-MULTIPLICACION:
-	MOV	#0X005,		W1 ;carga el valor cinco al registro uno
-	NOP
-	CLR	W2		   ;limpia el registro dos
-	NOP
-	MUL.UU	W1,		W0,		W2 ;multiplica y guarda en w2 la parte baja
-	MOV	W2,		PORTB
-	NOP
-	GOTO	CICLO
+	CALL _RETARDO_1S
+        GOTO    CICLO     
 
 ;/**@brief ESTA RUTINA INICIALIZA LOS PERIFERICOS DEL DSC
 ; * PORTD: 
@@ -177,8 +131,6 @@ MULTIPLICACION:
 ; * RB1 - SALIDA, LED 1 
 ; * RB2 - SALIDA, LED 2 
 ; * RB3 - SALIDA, LED 3 
-; * PORTF: 
-; * RF0 - ENTRADA, PUSH BUTTON 
 ; */
 INI_PERIFERICOS:
 	CLR	PORTD
@@ -186,27 +138,16 @@ INI_PERIFERICOS:
 	CLR	LATD
 	NOP
 	MOV	#0X000F,	W0
-	MOV	W0,		TRISD ;configurando como entradas solo los necesarios
+	MOV	W0,		TRISD
 	NOP
 	
 	CLR	PORTB
 	NOP
 	CLR	LATB
 	NOP
-	CLR	TRISB	;configurando como salidas
+	CLR	TRISB
 	NOP
 	SETM	ADPCFG
-
-	CLR	PORTF
-	NOP
-	CLR	LATF
-	NOP
-	CLR	TRISF
-	NOP
-	BSET	TRISF,	    #TRISF0 ;configurando entradas de las operaciones
-	NOP
-	BSET	TRISF,	    #TRISF1
-	NOP
 	
         RETURN
 
@@ -236,8 +177,6 @@ __T1Interrupt:
 
 
 .END                               ;TERMINACION DEL CODIGO DE PROGRAMA EN ESTE ARCHIVO
-
-
 
 
 
