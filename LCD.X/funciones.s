@@ -29,15 +29,15 @@ _imprimeLCD:
 _iniLCD8bits:
     PUSH    W0
     
-    CALL    _RETARDO_15mS
+    CALL    _RETARDO_15ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     
-    CALL    _RETARDO_15mS
+    CALL    _RETARDO_15ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     
-    CALL    _RETARDO_15mS
+    CALL    _RETARDO_15ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     

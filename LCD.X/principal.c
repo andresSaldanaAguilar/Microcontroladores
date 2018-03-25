@@ -83,6 +83,8 @@ int var1 __attribute__ ((near));
 void iniPerifericos( void );
 void iniInterrupciones( void );
 void RETARDO_1S( void );
+void RETARDO_15ms( void );
+
 void iniLCD8bits( void );
 void datoLCD( unsigned char);  
 void busyFlagLCD( void ); 
@@ -97,15 +99,15 @@ int main (void)
     iniPerifericos();
     iniInterrupciones(); 
     
-//    iniLCD8bits();
+    iniLCD8bits();
     
     //imprimeLCD(mensaje);  
     busyFlagLCD();
-//    datoLCD('I');
-//    busyFlagLCD();
-//    datoLCD('P');
-//    busyFlagLCD();
-//    datoLCD('N');
+    datoLCD('I');
+    busyFlagLCD();
+    datoLCD('P');
+    busyFlagLCD();
+    datoLCD('N');
 //    
 //    for(;EVER;)
 //    {       
@@ -140,9 +142,8 @@ void iniPerifericos( void )
     LATD = 0;
     Nop();
     TRISD = 0;
-    Nop();
-    
-    
+    Nop();    
+
     PORTB=0;
     Nop();
     LATB=0;
