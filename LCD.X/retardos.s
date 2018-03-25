@@ -2,7 +2,7 @@
 
 .global _RETARDO_1S
 .global _RETARDO_15mS
-
+.global _RETARDO_5mS
 ;/**@brief ESTA RUTINA GENERA UN RETARDO DE 1 SEG APROX
 ; */
 _RETARDO_1S:
@@ -25,7 +25,14 @@ CICLO1_1S:
 	RETURN
 	
 _RETARDO_15mS:
-	RETURN
+    CALL _RETARDO_5mS
+    CALL _RETARDO_5mS
+    CALL _RETARDO_5mS
+    RETURN
+	
+_RETARDO_5mS:
+    ;continuara...
+    RETURN
 	
 
 

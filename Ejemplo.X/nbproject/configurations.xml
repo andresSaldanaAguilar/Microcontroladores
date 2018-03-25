@@ -15,6 +15,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>CorrimientoAndres.s</itemPath>
+      <itemPath>../P4.X/P4.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -5,21 +5,112 @@
 ; * @device: DSPIC30F4013
 ; */
         .equ __30F4013, 1
+	;.EQU RS_LCD,	R0
+	;.EQU RW_LCD,	R1
+	;.EQU E_LCD,	R2
         .include "p30F4013.inc"
-	.global	_CONV_CODIGO
-_CONV_CODIGO:
-	BRA		    W0	;HACE UN SALTO DEL TAMAÑO DEL NUMERO EN EL REGISTRO W0
-	RETLW	     #0X6D, W0	;DIGITO_0 GUARDA EN WO EL NUMERO ESPECIFICADO
-	RETLW	     #0X7E, W0	;DIGITO_1
-	RETLW	     #0X30, W0	;DIGITO_2
-	RETLW	     #0X5F, W0	;DIGITO_3
-	RETLW	     #0X5F, W0	;DIGITO_4
-	RETLW	     #0X79, W0	;DIGITO_5
-	RETLW	     #0X7E, W0	;DIGITO_6
-	RETLW	     #0X79, W0	;DIGITO_7
-	RETLW	     #0X5B, W0	;DIGITO_8
-	RETLW	     #0X70, W0	;DIGITO_9
-
-	RETURN	    
+	.global	_comandoLCD
+	.global _datoLCD
+	.global _busyFlagLCD
+	.global _iniLCD8bits
+	.global _imprimeLCD
+	
+_imprimeLCD:
+    MOV	    W0,		    W1
+    MOV.B   [W1++],	    W0 ;en W0 tendremos el parametro y en w1 el apuntador al incio del arreglo
+    ;preguntar por cero
+    CALL _busyFlagLCD
+    CALL _datoLCD
+    ;continuara....
+    RETURN 
+	
+;/**@brief ESTa rutina veririca la bandera BF del lcd
+; */	RUTINA DE INICIALIZACIPON DE LCD
+_iniLCD8bits:
+    PUSH    W0
     
+    CALL    _RETARDO_15mS
+    MOV	    #0x30,	    W0
+    CALL    _comandoLCD
+    
+    CALL    _RETARDO_15mS
+    MOV	    #0x30,	    W0
+    CALL    _comandoLCD
+    
+    CALL    _RETARDO_15mS
+    MOV	    #0x30,	    W0
+    CALL    _comandoLCD
+    
+    CALL    _busyFlagLCD
+    MOV	    #0x38,	    W0
+    CALL    _comandoLCD
+    CALL    _busyFlagLCD
+    MOV	    #0x08,	    W0    
+    CALL    _comandoLCD
+    CALL    _busyFlagLCD    
+    MOV	    #0x01,	    W0  
+    CALL    _comandoLCD
+    CALL    _busyFlagLCD
+    MOV	    #0x06,	    W0  
+    CALL    _comandoLCD
+    CALL    _busyFlagLCD 
+    MOV	    #0x0F,	    W0  
+    CALL    _comandoLCD
+    
+    POP	    W0
+    RETURN 
+	
+;/**@brief ESTa rutina veririca la bandera BF del lcd
+; */	
+_busyFlagLCD:
+    push    W0
+    MOV	    #0X00FF,	W0
+    IOR	    TRISB	    ;Hace el or con w0 y lo guarda en trisb
+    NOP
+    BCLR    PORTD,	#RD0
+    NOP
+    BSET    PORTD,	#RD1
+    NOP
+    BSET    PORTD,	#RD2
+    NOP
+LOOP:
+    BTSC    PORTB	#7  ;checando si esta ocupado o no el LCD
+    GOTO    LOOP
+    BCLR    PORTD,	#RD2
+    NOP
+    MOV	    #0XFF00,	W0
+    AND	    TRISB
+    NOP
+    BCLR    PORTD,	#RD1
+    NOP
+    pop	    W0
+    RETURN	
+	
+;/**@brief ESTa rutina manda comandos al lcd, w0 guarda el comando a enviar
+; */	
+_comandoLCD:
+    BCLR    PORTD, #RD0
+    NOP
+    BCLR    PORTD,  #RD1
+    NOP
+    BSET    PORTD,  #RD2
+    NOP
+    MOV.B   WREG,   PORTB
+    NOP
+    BCLR    PORTD,  #RD2
+    NOP
+    RETURN
+  
+_datoLCD:
+    BSET    PORTD, #RD0
+    NOP
+    BCLR    PORTD,  #RD1
+    NOP
+    BSET    PORTD,  #RD2
+    NOP
+    MOV.B   WREG,   PORTB
+    NOP
+    BCLR    PORTD,  #RD2
+    NOP
+    RETURN
  

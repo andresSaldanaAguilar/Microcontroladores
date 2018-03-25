@@ -62,3 +62,4 @@ disassembly/
 
 # End of https://www.gitignore.io/api/mplabx
 /LCD.X/nbproject/private/
+/LCD1.X/nbproject/private/

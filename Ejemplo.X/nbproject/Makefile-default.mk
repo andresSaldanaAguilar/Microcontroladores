@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=CorrimientoAndres.s
+SOURCEFILES_QUOTED_IF_SPACED=CorrimientoAndres.s ../P4.X/P4.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CorrimientoAndres.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/CorrimientoAndres.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CorrimientoAndres.o ${OBJECTDIR}/_ext/761722435/P4.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/CorrimientoAndres.o.d ${OBJECTDIR}/_ext/761722435/P4.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/CorrimientoAndres.o
+OBJECTFILES=${OBJECTDIR}/CorrimientoAndres.o ${OBJECTDIR}/_ext/761722435/P4.o
 
 # Source Files
-SOURCEFILES=CorrimientoAndres.s
+SOURCEFILES=CorrimientoAndres.s ../P4.X/P4.s
 
 
 CFLAGS=
@@ -107,6 +107,13 @@ ${OBJECTDIR}/CorrimientoAndres.o: CorrimientoAndres.s  nbproject/Makefile-${CND_
 	${MP_CC} $(MP_EXTRA_AS_PRE)  CorrimientoAndres.s  -o ${OBJECTDIR}/CorrimientoAndres.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/CorrimientoAndres.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
 	@${FIXDEPS} "${OBJECTDIR}/CorrimientoAndres.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/_ext/761722435/P4.o: ../P4.X/P4.s  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/761722435" 
+	@${RM} ${OBJECTDIR}/_ext/761722435/P4.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761722435/P4.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  ../P4.X/P4.s  -o ${OBJECTDIR}/_ext/761722435/P4.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/_ext/761722435/P4.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/_ext/761722435/P4.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/CorrimientoAndres.o: CorrimientoAndres.s  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -114,6 +121,13 @@ ${OBJECTDIR}/CorrimientoAndres.o: CorrimientoAndres.s  nbproject/Makefile-${CND_
 	@${RM} ${OBJECTDIR}/CorrimientoAndres.o 
 	${MP_CC} $(MP_EXTRA_AS_PRE)  CorrimientoAndres.s  -o ${OBJECTDIR}/CorrimientoAndres.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/CorrimientoAndres.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
 	@${FIXDEPS} "${OBJECTDIR}/CorrimientoAndres.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/_ext/761722435/P4.o: ../P4.X/P4.s  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/761722435" 
+	@${RM} ${OBJECTDIR}/_ext/761722435/P4.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761722435/P4.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  ../P4.X/P4.s  -o ${OBJECTDIR}/_ext/761722435/P4.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  -Wa,-MD,"${OBJECTDIR}/_ext/761722435/P4.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)
+	@${FIXDEPS} "${OBJECTDIR}/_ext/761722435/P4.o.d"  $(SILENT)  -rsi ${MP_CC_DIR}../  
 	
 endif
 
