@@ -108,14 +108,14 @@ int main (void)
     datoLCD('P');
     busyFlagLCD();
     datoLCD('N');
-//    
-//    for(;EVER;)
-//    {       
+    
+    for(;EVER;)
+    {       
 //        busyFlagLCD();
 //        comandoLCD(); //gracias al ciclo infinito se repite el corrimiento muchas vece56
 //        //retardo de n segundos
-//        Nop();
-//    }
+        Nop();
+    }
      
     return 0;
 }

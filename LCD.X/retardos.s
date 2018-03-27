@@ -28,9 +28,8 @@ _RETARDO_5ms:
 		
 		MOV		#3276,			W0
 CICLO1_5ms:
-		DEC		W0,				W0
-		BRA		NZ,				CICLO1_5ms
-
+		DEC		W0,			W0
+		BRA		NZ,			CICLO1_5ms
 		POP		W0
 		RETURN
 ;******************************************************************************
@@ -39,11 +38,11 @@ CICLO1_5ms:
 ;RETORNO: 		NINGUNO
 ;******************************************************************************
 _RETARDO_15ms:
-		PUSH	W0
+		;PUSH	W0
 		CALL	_RETARDO_5ms
 		CALL    _RETARDO_5ms
 		CALL	_RETARDO_5ms
-		POP	W0
+		;POP	W0
 		RETURN
 
 ;******************************************************************************

@@ -29,15 +29,15 @@ _imprimeLCD:
 _iniLCD8bits:
     PUSH    W0
     
-    CALL    _RETARDO_15ms
+    CALL    _RETARDO_30ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     
-    CALL    _RETARDO_15ms
+    CALL    _RETARDO_30ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     
-    CALL    _RETARDO_15ms
+    CALL    _RETARDO_30ms
     MOV	    #0x30,	    W0
     CALL    _comandoLCD
     
@@ -63,7 +63,7 @@ _iniLCD8bits:
 ;/**@brief ESTa rutina veririca la bandera BF del lcd
 ; */	
 _busyFlagLCD:
-    push    W0
+    PUSH    W0
     MOV	    #0X00FF,	W0
     IOR	    TRISB	    ;Hace el or con w0 y lo guarda en trisb
     NOP
@@ -74,16 +74,17 @@ _busyFlagLCD:
     BSET    PORTD,	#RD2
     NOP
 LOOP:
-    BTSC    PORTB	#7  ;checando si esta ocupado o no el LCD
+    BTSC    PORTB,	#7  ;checando si esta ocupado o no el LCD
     GOTO    LOOP
     BCLR    PORTD,	#RD2
     NOP
+    CLR	    W0
     MOV	    #0XFF00,	W0
     AND	    TRISB
     NOP
     BCLR    PORTD,	#RD1
     NOP
-    pop	    W0
+    POP	    W0
     RETURN	
 	
 ;/**@brief ESTa rutina manda comandos al lcd, w0 guarda el comando a enviar
