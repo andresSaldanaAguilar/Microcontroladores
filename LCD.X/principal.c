@@ -91,29 +91,30 @@ void busyFlagLCD( void );
 void comandoLCD( unsigned char );
 void imprimeLCD (char msj[]);
 
+
 char mensaje[]="INSTITUTO POLITECNICO NACIONAL";
 
 int main (void)
 {   
-//    short int codigo,dato;
     iniPerifericos();
     iniInterrupciones(); 
     
     iniLCD8bits();
     
-    //imprimeLCD(mensaje);  
-    busyFlagLCD();
-    datoLCD('I');
-    busyFlagLCD();
-    datoLCD('P');
-    busyFlagLCD();
-    datoLCD('N');
+    imprimeLCD(mensaje);  
+//    busyFlagLCD();
+//    datoLCD('I');
+//    busyFlagLCD();
+//    datoLCD('P');
+//    busyFlagLCD();
+//    datoLCD('N');
     
     for(;EVER;)
     {       
-//        busyFlagLCD();
-//        comandoLCD(); //gracias al ciclo infinito se repite el corrimiento muchas vece56
-//        //retardo de n segundos
+        busyFlagLCD();
+        comandoLCD(0x18); //gracias al ciclo infinito se repite el corrimiento muchas vece56
+        RETARDO_1S();
+        //retardo de n segundos
         Nop();
     }
      
