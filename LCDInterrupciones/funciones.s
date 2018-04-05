@@ -15,14 +15,21 @@
 	.global _iniLCD8bits
 	.global _imprimeLCD
 	
+;/**@brief ESTA RUTINA MUESTRA UN MENSAJE EN LA LCD
+; * @param W0, APUNTADOR DEL MENSAJE A MOSTRAR
+; */
 _imprimeLCD:
-    MOV	    W0,		    W1
-    MOV.B   [W1++],	    W0 ;en W0 tendremos el parametro y en w1 el apuntador al incio del arreglo
-    ;preguntar por cero
-    CALL _busyFlagLCD
-    CALL _datoLCD
-    ;continuara....
-    RETURN 
+    MOV	    W0,	    W1
+    CLR	    W0
+RECORRER:
+    MOV.B   [W1++], W0 ;en W0 tendremos el parametro y en w1 el apuntador al incio del arreglo
+    CP0.B   W0
+    BRA	    Z, SALIR
+    GOTO    RECORRER
+    CALL    _busyFlagLCD
+    CALL    _datoLCD
+SALIR:
+    RETURN
 	
 ;/**@brief ESTa rutina veririca la bandera BF del lcd
 ; */	RUTINA DE INICIALIZACIPON DE LCD

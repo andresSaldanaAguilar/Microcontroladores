@@ -94,21 +94,37 @@ void imprimeLCD (char msj[]);
 char cont[5];
 int main (void)
 {   
-    unsigned char uni, dece, cen, umi;
+    //Variables para llevar conteo en la lcd
+    unsigned char uni, dec, cen, umi;
+    //Inicializamos perifericos
     iniPerifericos();
+    //Interrupciones
     iniInterrupciones(); 
-    
+    //Inicializamos la lcd
     iniLCD8bits();
-    
-    imprimeLCD("conteo");  
+    //Imprimimos que iniciara el conteo
+    imprimeLCD("Conteo:");
+    //Variables para conteo todas inician en cero
     umi=0;
     cen=0;
-    dece=0;
+    dec=0;
     uni=0;
+    //
+    int IFSO;
     
     for(;EVER;)
     {
-        //continuara...
+        //Pasamos el valor que tengan las variables
+        //del conteo a ascii
+        //la primera vez que se pasa por aquì se convierten en cero
+        cont[0]=umi+0x30;
+        cont[1]=cen+0x30;
+        cont[2]=dec+0x30;
+        cont[3]=uni+0x30;
+        cont[4]=0;
+        imprimeLCD(cont);
+        busyFlagLCD(); 
+        comandoLCD(0x87);
         Nop();
     }
      
@@ -121,7 +137,10 @@ int main (void)
 /****************************************************************************/
 void iniInterrupciones( void )
 {
-    //habilirar int
+    //Inicializamos interrupciones
+    IFS0bits.INT0IF=0;
+    IEC0bits.INT0IE=1;
+    INTCON2bits.INT0EP=1;
 }
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LOS PERIFERICOS                      */
@@ -129,22 +148,35 @@ void iniInterrupciones( void )
 /* RETORNO: NINGUNO                                                         */
 /****************************************************************************/
 void iniPerifericos( void )
-{
+{   
+    //inicializar puertos
+    //Inicializamos puerto D
     PORTD = 0;
     Nop();
     LATD = 0;
     Nop();
     TRISD = 0;
     Nop();    
-
+    
+    //Inicializamos puerto B
     PORTB=0;
     Nop();
     LATB=0;
     Nop();
     TRISB=0;
     Nop();
+    
+    //Inicializamos puerto A
+    PORTA=0;
+    Nop();
+    LATA=0;
+    Nop();
+    TRISA=0XFFFF;
+    Nop();
+    
+    //Deshabilitamos analogico digital
     ADPCFG=0XFFFF;  
-    //inicializar puertos
+   
 }
  
 /********************************************************************************/

@@ -12,7 +12,7 @@ _INT0Interrupt:
     BRA	    NZ	    FIN_ISR_INT0
     CLR.B   _uni
     INC.B   _dece
-    ;elioth continuara...
+    
     
 FIN_ISR_INT0: 
     BLCR    IFS0,   #INT0IF
