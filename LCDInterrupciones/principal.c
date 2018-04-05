@@ -92,14 +92,13 @@ void comandoLCD( unsigned char );
 void imprimeLCD (char msj[]);
 
 char cont[5];
+//Variables para llevar conteo en la lcd
+unsigned char uni, dec, cen, umi;
+
 int main (void)
 {   
-    //Variables para llevar conteo en la lcd
-    unsigned char uni, dec, cen, umi;
     //Inicializamos perifericos
     iniPerifericos();
-    //Interrupciones
-    iniInterrupciones(); 
     //Inicializamos la lcd
     iniLCD8bits();
     //Imprimimos que iniciara el conteo
@@ -109,8 +108,8 @@ int main (void)
     cen=0;
     dec=0;
     uni=0;
-    //
-    int IFSO;
+    //Interrupciones
+    iniInterrupciones(); 
     
     for(;EVER;)
     {
