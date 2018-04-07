@@ -25,9 +25,9 @@ RECORRER:
     MOV.B   [W1++], W0 ;en W0 tendremos el parametro y en w1 el apuntador al incio del arreglo
     CP0.B   W0
     BRA	    Z, SALIR
-    GOTO    RECORRER
     CALL    _busyFlagLCD
     CALL    _datoLCD
+    GOTO    RECORRER
 SALIR:
     RETURN
 	

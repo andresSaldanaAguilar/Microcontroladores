@@ -120,11 +120,10 @@ int main (void)
         cont[1]=cen+0x30;
         cont[2]=dec+0x30;
         cont[3]=uni+0x30;
-        cont[4]=0;
+        cont[4]=0+0x30;
         imprimeLCD(cont);
         busyFlagLCD(); 
         comandoLCD(0x87);
-        Nop();
     }
      
     return 0;
@@ -148,7 +147,6 @@ void iniInterrupciones( void )
 /****************************************************************************/
 void iniPerifericos( void )
 {   
-    //inicializar puertos
     //Inicializamos puerto D
     PORTD = 0;
     Nop();
@@ -174,8 +172,7 @@ void iniPerifericos( void )
     Nop();
     
     //Deshabilitamos analogico digital
-    ADPCFG=0XFFFF;  
-   
+    ADPCFG=0XFFFF;    
 }
  
 /********************************************************************************/
