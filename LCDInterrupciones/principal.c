@@ -120,7 +120,7 @@ int main (void)
         cont[1]=cen+0x30;
         cont[2]=dec+0x30;
         cont[3]=uni+0x30;
-        cont[4]=0+0x30;
+        cont[4]=0;
         //RETARDO_15ms();
         //RETARDO_15ms();
         imprimeLCD(cont);
