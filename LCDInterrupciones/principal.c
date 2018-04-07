@@ -79,12 +79,12 @@ int y_input[MUESTRAS] __attribute__ ((space(ymemory)));
 /* EN LOS PRIMEROS 8KB DE RAM                                                   */
 /********************************************************************************/
 int var1 __attribute__ ((near));
- 
+
 void iniPerifericos( void );
 void iniInterrupciones( void );
 void RETARDO_1S( void );
 void RETARDO_15ms( void );
-
+void INT0Interrupt (void);
 void iniLCD8bits( void );
 void datoLCD( unsigned char);  
 void busyFlagLCD( void ); 
@@ -121,6 +121,8 @@ int main (void)
         cont[2]=dec+0x30;
         cont[3]=uni+0x30;
         cont[4]=0+0x30;
+        //RETARDO_15ms();
+        //RETARDO_15ms();
         imprimeLCD(cont);
         busyFlagLCD(); 
         comandoLCD(0x87);
@@ -135,10 +137,18 @@ int main (void)
 /****************************************************************************/
 void iniInterrupciones( void )
 {
+    // Reset Interrupt flags.
+    IFS1bits.INT1IF = 0;    //Reset INT0 interrupt flag
+    IFS1bits.INT2IF = 0;    //Reset INT0 interrupt flag
+ 
     //Inicializamos interrupciones
-    IFS0bits.INT0IF=0;
-    IEC0bits.INT0IE=1;
-    INTCON2bits.INT0EP=1;
+    IFS0bits.INT0IF=0; //Reset INT0 interrupt flag
+    IEC0bits.INT0IE=1;  //enable INT0 Interrupt Service Routine.
+    INTCON2bits.INT0EP=1; // Interrupt edge polarity.
+    
+    // Set Interrupt Priority.
+    IPC0bits.INT0IP = 1;    // set low priority.
+
 }
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LOS PERIFERICOS                      */

@@ -1,6 +1,6 @@
     
     .include "p30F4013.inc"
-    .GLOBAL _INT0Interrupt
+    .GLOBAL __INT0Interrupt
     .GLOBAL _uni
     .GLOBAL _dec
     .GLOBAL _cen
@@ -10,7 +10,7 @@
 ; * @param
 ; */    
     
-_INT0Interrupt:
+__INT0Interrupt:
     PUSH    W0
     INC.B   _uni
     MOV	    #10,    W0
