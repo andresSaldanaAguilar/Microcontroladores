@@ -15,54 +15,6 @@
 	.global _iniLCD8bits
 	.global _imprimeLCD
 	.global _buscaNota
-	.global _BP
-	
-
-;/**@brief ESTA RUTINA HACE LA LOGICA DEL MAIN DE COMPARACION DE NOTAS, ES EXPERIMENTAL
-; * @param W0, APUNTADOR DEL MENSAJE A MOSTRAR
-; */
-;_buscaNota:
-;    PUSH    W0
-;    MOV	    #RF0,    W0 ;DO
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_DO
-;    MOV	    #RF1,    W0 ;RE
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_RE
-;    MOV	    #RF2,    W0 ;MI
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_MI 
-;    MOV	    #RF3,    W0 ;FA
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_FA
-;    MOV	    #RF4,    W0 ;SOL
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_SOL
-;    MOV	    #RF5,    W0 ;LA
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_LA
-;    MOV	    #RF6,    W0 ;SI
-;    NOP
-;    CP0     W0
-;    BRA	    NZ,	    B_NOTA_SI  
-;    CLR	    _BP
-;    ;CLR	    PORTD   #3  
-;    ;ticon, con = 0;
-;    POP	    W0
-;    RETURN
-    
-;B_NOTA_DO:
-;    CP0     _BP
-;    ;BRA	    NZ,	    NOTA_DO
-;    POP	    W0
-;    RETURN
-   
 
 ;/**@brief ESTA RUTINA MUESTRA UN MENSAJE EN LA LCD
 ; * @param W0, APUNTADOR DEL MENSAJE A MOSTRAR

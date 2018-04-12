@@ -154,7 +154,7 @@ int main (void)
         else{
             BP = 0;
             PORTDbits.RD3 = 0;
-            //TICON...
+            T1CONbits.TON = 0;
         }
     }
      
