@@ -90,8 +90,16 @@ void datoLCD( unsigned char);
 void busyFlagLCD( void ); 
 void comandoLCD( unsigned char );
 void imprimeLCD (char msj[]);
+//Funciones para las notas
+void Nota_DO(void);
+void Nota_RE(void);
+void Nota_MI(void);
+void Nota_FA(void);
+void Nota_SOL(void);
+void Nota_LA(void);
+void Nota_SI(void);
 
-char cont[5];
+//char cont[5];
 //Bandera
 unsigned char BP;
 
@@ -111,43 +119,50 @@ int main (void)
     {
         if(!PORTFbits.RF0){ //DO
             if(!BP){
-                //Nota_DO();
+                Nota_DO();
+                imprimeLCD("NOTA DO");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF1){ //RE
-                        if(!BP){
-                //Nota_RE();
-                BP = 1;
+                if(!BP){
+                    Nota_RE();
+                    imprimeLCD("NOTA RE");
+                    BP = 1;
+                }
             }
-        }
         else if(!PORTFbits.RF2){ //MI
             if(!BP){
-                //Nota_MI();
+                Nota_MI();
+                imprimeLCD("NOTA MI");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF3){ //FA
             if(!BP){
-                //Nota_FA();
+                Nota_FA();
+                imprimeLCD("NOTA FA");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF4){ //SOL
             if(!BP){
-                //Nota_SOL();
+                Nota_SOL();
+                imprimeLCD("NOTA SOL");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF5){ //LA
             if(!BP){
-                //Nota_LA();
+                Nota_LA();
+                imprimeLCD("NOTA LA");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF6){ //SI
             if(!BP){
-                //Nota_SI();
+                Nota_SI();
+                imprimeLCD("NOTA SI");
                 BP = 1;
             }
         }
