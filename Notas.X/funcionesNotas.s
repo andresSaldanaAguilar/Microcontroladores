@@ -9,7 +9,7 @@
     .GLOBAL _Nota_SI
 
 ;Funciones de las notas
-;Los valores que son asignados a PR1 dependen de la preescala
+;Los valores que son asignados a PR1 y T1CON dependen de la preescala
 _Nota_DO:
     PUSH	    W0
     CLR TMR1
@@ -33,7 +33,7 @@ _Nota_MI:
     CLR TMR1
     MOV #11,	    W0
     MOV W0,	    PR1
-    MOV	#0X8020,    W0
+    MOV	#0X8030,    W0
     MOV W0,	    T1CON
     POP		    W0
     RETURN
@@ -42,7 +42,7 @@ _Nota_FA:
     CLR TMR1
     MOV #2639,	    W0
     MOV W0,	    PR1
-    MOV	#0X8020,    W0
+    MOV	#0X8000,    W0
     MOV W0,	    T1CON
     POP		    W0
     RETURN
@@ -51,7 +51,7 @@ _Nota_SOL:
     CLR TMR1
     MOV #2351,	    W0
     MOV W0,	    PR1
-    MOV	#0X8020,    W0
+    MOV	#0X8000,    W0
     MOV W0,	    T1CON
     POP		    W0
     RETURN
@@ -60,7 +60,7 @@ _Nota_LA:
     CLR TMR1
     MOV #8,	    W0
     MOV W0,	    PR1
-    MOV	#0X8020,    W0
+    MOV	#0X8030,    W0
     MOV W0,	    T1CON
     POP		    W0
     RETURN
@@ -69,7 +69,7 @@ _Nota_SI:
     CLR TMR1
     MOV #1866,	    W0
     MOV W0,	    PR1
-    MOV	#0X8020,    W0
+    MOV	#0X8000,    W0
     MOV W0,	    T1CON
     POP		    W0
     RETURN

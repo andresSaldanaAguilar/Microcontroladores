@@ -1,0 +1,17 @@
+        .include "p30F4013.inc"
+
+        .global _CONV_CODIGO      
+    
+    ;/**@brief ESTA RUTINA REALIZA UN CONVERTIDOR DE CODIGO
+; * @PARAM: W0, VALOR A CONVERTIR
+; */
+_CONV_CODIGO:
+	BRA	W0
+	RETLW	#0X6D,	    W0	;DIGITO_0
+	RETLW	#0X7E,	    W0	;DIGITO_1
+	RETLW	#0X30,	    W0	;DIGITO_2
+	RETLW	#0X12,	    W0	;DIGITO_3
+	;CONTINUARA...
+
+
+
