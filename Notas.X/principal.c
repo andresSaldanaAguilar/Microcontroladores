@@ -119,18 +119,19 @@ int main (void)
     {
         if(!PORTFbits.RF0){ //DO
             if(!BP){
+                comandoLCD(0x87);
                 Nota_DO();
                 imprimeLCD("NOTA DO");
                 BP = 1;
             }
         }
         else if(!PORTFbits.RF1){ //RE
-                if(!BP){
-                    Nota_RE();
-                    imprimeLCD("NOTA RE");
-                    BP = 1;
-                }
+            if(!BP){
+                Nota_RE();
+                imprimeLCD("NOTA RE");
+                BP = 1;
             }
+        }
         else if(!PORTFbits.RF2){ //MI
             if(!BP){
                 Nota_MI();
@@ -229,7 +230,7 @@ void iniPerifericos( void )
 /* SE USA PUSH.S PARA GUARDAR LOS REGISTROS W0, W1, W2, W3, C, Z, N Y DC EN LOS */
 /* REGISTROS SOMBRA                                                             */
 /********************************************************************************/
-void __attribute__((__interrupt__)) _T1Interrupt( void )
-{
-        IFS0bits.T1IF = 0;    //SE LIMPIA LA BANDERA DE INTERRUPCION DEL TIMER 1                      
-}
+//void __attribute__((__interrupt__)) _T1Interrupt( void )
+//{
+//        IFS0bits.T1IF = 0;    //SE LIMPIA LA BANDERA DE INTERRUPCION DEL TIMER 1                      
+//}
