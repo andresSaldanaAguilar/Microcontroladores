@@ -119,7 +119,7 @@ int main (void)
     {
         if(!PORTFbits.RF0){ //DO
             if(!BP){
-                comandoLCD(0x87);
+                comandoLCD(0x01);
                 Nota_DO();
                 imprimeLCD("NOTA DO");
                 BP = 1;
@@ -183,11 +183,11 @@ int main (void)
 /****************************************************************************/
 void iniInterrupciones( void )
 {
-    //Inicializamos interrupciones
-    IFS0bits.INT0IF=0; //Reset INT0 interrupt flag
-    IEC0bits.INT0IE=1;  //enable INT0 Interrupt Service Routine.
-    IFS1bits.INT1IF=0; //Reset INT1 interrupt flag
-    IEC1bits.INT1IE=1;  //enable INT1 Interrupt Service Routine.
+    //Apagamos y prendemos banderitas
+    IFS0bits.T1IF=0;
+    //activa mecanismo de interrupcion de timer 1
+    IEC0bits.T1IE=1;
+    //INTCON2 sirve para pefifericos externos
 }
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LOS PERIFERICOS                      */
