@@ -95,7 +95,7 @@ void EN_RTC(void);
 
 //char cont[5];
 //Bandera
-unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA;
+unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA, CONT;
 
 int main (void)
 {   
@@ -106,11 +106,22 @@ int main (void)
     //APAGA
     APAGA();
     EN_RTC();
-    USEG=DSEG=UMIN=DMIN=UHORA=DHORA=0;
+    //Para hacer pruebas de si funciona con determinadas horas, podemos iniciarlizar
+    //Las variables a un valor por default
+    
+    USEG=0;
+    DSEG=0;
+    UMIN=0;
+    DMIN=0;
+    UHORA=0;
+    DHORA=0;
+    CONT=0;
     //Interrupciones
     iniInterrupciones();
-    //bandera
-    
+    //aquí que más iba ?
+    for(;;){
+        imprimeLCD(DHORA+UHORA+":"+DMIN+UMIN+":"+DSEG+USEG);
+    }
     
      
     return 0;
@@ -154,12 +165,12 @@ void iniPerifericos( void )
     
     //Inicializamos puerto D
     PORTCbits.RC13=1;
+    Nop();
     PORTCbits.RC14=1;
     Nop();
-    //LATF=0;
-    Nop();
+    //LATF=0;    
     //TRISC=0XFFFF;
-    Nop();
+//    Nop();
     
     //Deshabilitamos analogico digital
     ADPCFG=0XFFFF;    
