@@ -1,4 +1,4 @@
-/**@brief: Este programa muestra los bloques de un 
+    /**@brief: Este programa muestra los bloques de un 
  * programa en C embebido para el DSPIC, los bloques son:
  * BLOQUE 1. OPCIONES DE CONFIGURACION DEL DSC: OSCILADOR, WATCHDOG,
  * BROWN OUT RESET, POWER ON RESET Y CODIGO DE PROTECCION
@@ -90,18 +90,12 @@ void datoLCD( unsigned char);
 void busyFlagLCD( void ); 
 void comandoLCD( unsigned char );
 void imprimeLCD (char msj[]);
-//Funciones para las notas
-void Nota_DO(void);
-void Nota_RE(void);
-void Nota_MI(void);
-void Nota_FA(void);
-void Nota_SOL(void);
-void Nota_LA(void);
-void Nota_SI(void);
+void APAGA (void);
+void EN_RTC(void);
 
 //char cont[5];
 //Bandera
-unsigned char BP;
+unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA;
 
 int main (void)
 {   
@@ -109,70 +103,15 @@ int main (void)
     iniPerifericos();
     //Inicializamos la lcd
     iniLCD8bits();
+    //APAGA
+    APAGA();
+    EN_RTC();
+    USEG=DSEG=UMIN=DMIN=UHORA=DHORA=0;
     //Interrupciones
-    iniInterrupciones(); 
+    iniInterrupciones();
     //bandera
-    BP = 0;
-
     
-    for(;EVER;)
-    {
-        if(!PORTFbits.RF0){ //DO
-            if(!BP){
-                comandoLCD(0x01);
-                Nota_DO();
-                imprimeLCD("NOTA DO");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF1){ //RE
-            if(!BP){
-                Nota_RE();
-                imprimeLCD("NOTA RE");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF2){ //MI
-            if(!BP){
-                Nota_MI();
-                imprimeLCD("NOTA MI");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF3){ //FA
-            if(!BP){
-                Nota_FA();
-                imprimeLCD("NOTA FA");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF4){ //SOL
-            if(!BP){
-                Nota_SOL();
-                imprimeLCD("NOTA SOL");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF5){ //LA
-            if(!BP){
-                Nota_LA();
-                imprimeLCD("NOTA LA");
-                BP = 1;
-            }
-        }
-        else if(!PORTFbits.RF6){ //SI
-            if(!BP){
-                Nota_SI();
-                imprimeLCD("NOTA SI");
-                BP = 1;
-            }
-        }
-        else{
-            BP = 0;
-            PORTDbits.RD3 = 0;
-            T1CONbits.TON = 0;
-        }
-    }
+    
      
     return 0;
 }
@@ -188,6 +127,7 @@ void iniInterrupciones( void )
     //activa mecanismo de interrupcion de timer 1
     IEC0bits.T1IE=1;
     //INTCON2 sirve para pefifericos externos
+    T1CONbits.TON = 1;
 }
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LOS PERIFERICOS                      */
@@ -212,12 +152,13 @@ void iniPerifericos( void )
     TRISB=0;
     Nop();
     
-    //Inicializamos puerto F
-    PORTF=0;
+    //Inicializamos puerto D
+    PORTCbits.RC13=1;
+    PORTCbits.RC14=1;
     Nop();
-    LATF=0;
+    //LATF=0;
     Nop();
-    TRISF=0XFFFF;
+    //TRISC=0XFFFF;
     Nop();
     
     //Deshabilitamos analogico digital
