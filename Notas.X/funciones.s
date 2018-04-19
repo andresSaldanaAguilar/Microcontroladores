@@ -122,4 +122,5 @@ _datoLCD:
     BCLR    PORTD,  #RD2
     NOP
     RETURN
+    
  

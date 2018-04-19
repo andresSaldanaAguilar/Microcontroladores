@@ -95,7 +95,7 @@ void EN_RTC(void);
 
 //char cont[5];
 //Bandera
-unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA;
+unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA, CONT;
 
 int main (void)
 {   
@@ -105,14 +105,24 @@ int main (void)
     iniLCD8bits();
     //APAGA
     APAGA();
+    //ENABLE  ALGO
     EN_RTC();
-    USEG=DSEG=UMIN=DMIN=UHORA=DHORA=0;
+    //Para hacer pruebas de si funciona con determinadas horas, podemos inicializar
+    //Las variables a un valor por default  
+    USEG=0;
+    DSEG=0;
+    UMIN=0;
+    DMIN=0;
+    UHORA=0;
+    DHORA=0;
+    CONT=0;
     //Interrupciones
     iniInterrupciones();
-    //bandera
-    
-    
-     
+    //aquí que más iba ?
+    for(;;){
+        //imprimeLCD(DHORA+UHORA+":"+DMIN+UMIN+":"+DSEG+USEG);
+    }
+       
     return 0;
 }
 /****************************************************************************/
@@ -126,7 +136,7 @@ void iniInterrupciones( void )
     IFS0bits.T1IF=0;
     //activa mecanismo de interrupcion de timer 1
     IEC0bits.T1IE=1;
-    //INTCON2 sirve para pefifericos externos
+    //T1CON sirve para pefifericos externos
     T1CONbits.TON = 1;
 }
 /****************************************************************************/
@@ -152,26 +162,12 @@ void iniPerifericos( void )
     TRISB=0;
     Nop();
     
-    //Inicializamos puerto D
+    //Inicializamos puerto D ***duda aqui si asi ya funca
     PORTCbits.RC13=1;
+    Nop();
     PORTCbits.RC14=1;
-    Nop();
-    //LATF=0;
-    Nop();
-    //TRISC=0XFFFF;
     Nop();
     
     //Deshabilitamos analogico digital
     ADPCFG=0XFFFF;    
 }
- 
-/********************************************************************************/
-/* DESCRICION:  ISR (INTERRUPT SERVICE ROUTINE) DEL TIMER 1                     */
-/* LA RUTINA TIENE QUE SER GLOBAL PARA SER UNA ISR                              */ 
-/* SE USA PUSH.S PARA GUARDAR LOS REGISTROS W0, W1, W2, W3, C, Z, N Y DC EN LOS */
-/* REGISTROS SOMBRA                                                             */
-/********************************************************************************/
-//void __attribute__((__interrupt__)) _T1Interrupt( void )
-//{
-//        IFS0bits.T1IF = 0;    //SE LIMPIA LA BANDERA DE INTERRUPCION DEL TIMER 1                      
-//}
