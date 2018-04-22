@@ -9,6 +9,7 @@
  * @oscillator: FRC, 7.3728MHz
  */
 #include "p30F4013.h"
+#include <string.h>
 /********************************************************************************/
 /*                      BITS DE CONFIGURACIÓN                                   */ 
 /********************************************************************************/
@@ -97,8 +98,10 @@ void EN_RTC(void);
 //Bandera
 unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA, CONT;
 
+
 int main (void)
 {   
+    char *aux=NULL;
     //Inicializamos perifericos
     iniPerifericos();
     //Inicializamos la lcd
@@ -108,7 +111,6 @@ int main (void)
     EN_RTC();
     //Para hacer pruebas de si funciona con determinadas horas, podemos iniciarlizar
     //Las variables a un valor por default
-    
     USEG=0;
     DSEG=0;
     UMIN=0;
@@ -120,7 +122,16 @@ int main (void)
     iniInterrupciones();
     //aquí que más iba ?
     for(;;){
-        imprimeLCD(DHORA+UHORA+":"+DMIN+UMIN+":"+DSEG+USEG);
+        //No estoy seguro que esto funcione
+        strcpy(aux,(char*)DHORA);
+        strcat(aux,(char*)UHORA);
+        strcat(aux,":");
+        strcat(aux,(char*)DMIN);
+        strcat(aux,(char*)UMIN);
+        strcat(aux,":");
+        strcat(aux,(char*)DSEG);
+        strcat(aux,(char*)USEG);
+        imprimeLCD(aux);
     }
     
      
