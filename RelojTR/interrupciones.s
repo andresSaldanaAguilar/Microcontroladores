@@ -1,17 +1,16 @@
-    
-    .include "p30F4013.inc"
-    .GLOBAL __T1Interrupt
-    .GLOBAL _USEG
-    .GLOBAL _DSEG
-    .GLOBAL _UMIN
-    .GLOBAL _DMIN
-    .GLOBAL _UHORA
-    .GLOBAL _DHORA
-    
+.include "p30F4013.inc"
+.GLOBAL __T1Interrupt
+.GLOBAL _USEG
+.GLOBAL _DSEG
+.GLOBAL _UMIN
+.GLOBAL _DMIN
+.GLOBAL _UHORA
+.GLOBAL _DHORA
+
 ;/**@brief ESTA RUTINA funciona como un reloj en tiempo real
 ; * @param
 ; */    
-    
+
 ;Interrupción del timer, estas vienen definidas en el archivo .gld
 ;Línea 360
 __T1Interrupt:    
@@ -47,10 +46,10 @@ __T1Interrupt:
     CLR.B   _UHORA 
     INC.B   _DHORA
 FIN_ISR_INT1: 
-    BCLR    IFS0,   #INT0IF
+    BCLR    IFS0,   #T1IF
     POP	    W0
     RETFIE  
-    
+
 ;Ya estamos en la hora 20 al menos
 VEINTICUATRO_HORAS:
     MOV	    #4,	    W0		    ;Hay que ver si la UHORA no es 4
