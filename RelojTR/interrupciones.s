@@ -56,12 +56,13 @@ VEINTICUATRO_HORAS:
     CP.B    _UHORA
     BRA	    NZ,	    FIN_ISR_INT1    ;Si no es 4, entonces terminamos
     ;Si si es 4, reinicio todo porque ya pasaron 24 horas
-    CLR.B   _USEG
-    CLR.B   _DSEG
-    CLR.B   _UMIN
+    MOV #0, W0
+    CLR.B    _USEG
+    CLR.B    _DSEG
+    CLR.B    _UMIN
     CLR.B   _DMIN
-    CLR.B   _UHORA
+    CLR.B    _UHORA
     CLR.B   _DHORA
-    CALL    FIN_ISR_INT1
+    GOTO    FIN_ISR_INT1
     
     
