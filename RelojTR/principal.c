@@ -109,13 +109,12 @@ int main (void)
     ENRTC();
     //Para hacer pruebas de si funciona con determinadas horas, podemos iniciarlizar
     //Las variables a un valor por default
-    USEG=9;
-    DSEG=5;
+    USEG=0;
+    DSEG=4;
     UMIN=9;
     DMIN=5;
     UHORA=3;
     DHORA=2;
-    CONT=0;
     
     //Interrupciones
     //Apagamos y prendemos banderitas
@@ -124,7 +123,6 @@ int main (void)
     IEC0bits.T1IE=1;
     //sirve para pefifericos externos
     T1CONbits.TON = 1;
-
     comandoLCD(0xC);
     
     for(;EVER;){
