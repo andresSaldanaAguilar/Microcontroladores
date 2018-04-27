@@ -125,6 +125,7 @@ int main (void)
     //sirve para pefifericos externos
     T1CONbits.TON = 1;
 
+    comandoLCD(0xC);
     
     for(;EVER;){
         cont[0]= DHORA + 0x30;
@@ -138,7 +139,7 @@ int main (void)
         cont[8]= 0;
         imprimeLCD(cont);
         busyFlagLCD();
-        comandoLCD(1);
+        comandoLCD(0x80);
     }    
     return 0;
 }
