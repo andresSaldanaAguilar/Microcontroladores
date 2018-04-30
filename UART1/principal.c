@@ -85,72 +85,62 @@ void iniPerifericos( void );
 void iniInterrupciones( void );
 void RETARDO_1S( void );
 void RETARDO_15ms( void );
-void INT0Interrupt (void);
 void iniLCD8bits( void );
 void datoLCD( unsigned char);  
 void busyFlagLCD( void ); 
 void comandoLCD( unsigned char );
 void imprimeLCD (char msj[]);
-void APAGA (void);
-void EN_RTC(void);
+void config( void );
 
-//char cont[5];
-//Bandera
-unsigned char USEG,DSEG,UMIN,DMIN,UHORA,DHORA, CONT;
+
+int datoRCV,dato;
 
 
 int main (void)
 {   
-    char *aux=NULL;
     //Inicializamos perifericos
     iniPerifericos();
     //Inicializamos la lcd
     iniLCD8bits();
-    //APAGA
-    APAGA();
-    EN_RTC();
-    //Para hacer pruebas de si funciona con determinadas horas, podemos iniciarlizar
-    //Las variables a un valor por default
-    USEG=0;
-    DSEG=0;
-    UMIN=0;
-    DMIN=0;
-    UHORA=0;
-    DHORA=0;
-    CONT=0;
-    //Interrupciones
+    //config
+    config();
+    //interrupciones
     iniInterrupciones();
-    //aquí que más iba ?
-    for(;;){
-        //No estoy seguro que esto funcione
-        strcpy(aux,(char*)DHORA);
-        strcat(aux,(char*)UHORA);
-        strcat(aux,":");
-        strcat(aux,(char*)DMIN);
-        strcat(aux,(char*)UMIN);
-        strcat(aux,":");
-        strcat(aux,(char*)DSEG);
-        strcat(aux,(char*)USEG);
-        imprimeLCD(aux);
-    }
     
+    for(;;){
+        if(datoRCV){
+           busyFlagLCD();
+           datoLCD(dato);
+           datoRCV = 0;
+        }
+        else continue;
+    }    
      
     return 0;
 }
+
+void iniInterrupciones( void )
+{
+    //Apagamos y prendemos banderitas
+    IFS0bits.U1RXIF=0;
+    //activa mecanismo de interrupcion de timer 1
+    IEC0bits.U1RXIE=1;
+    //activamos uart
+    U1MODEbits.UARTEN = 1;
+}
+
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LAS INTERRPCIONES                    */
 /* PARAMETROS: NINGUNO                                                      */
 /* RETORNO: NINGUNO                                                         */
 /****************************************************************************/
-void iniInterrupciones( void )
-{
-    //Apagamos y prendemos banderitas
-    IFS0bits.T1IF=0;
-    //activa mecanismo de interrupcion de timer 1
-    IEC0bits.T1IE=1;
-    //INTCON2 sirve para pefifericos externos
-    T1CONbits.TON = 1;
+void config( void ){
+    U1MODE = 0X0420;
+    U1STA  = 0X8000;
+    U1BRG  = 11;
+    datoRCV = 0;
 }
+
 /****************************************************************************/
 /* DESCRICION:  ESTA RUTINA INICIALIZA LOS PERIFERICOS                      */
 /* PARAMETROS: NINGUNO                                                      */
@@ -174,14 +164,17 @@ void iniPerifericos( void )
     TRISB=0;
     Nop();
     
-    //Inicializamos puerto D
-    PORTCbits.RC13=1;
+    //Inicializamos puerto C
+    PORTC = 0;
     Nop();
-    PORTCbits.RC14=1;
+    LATC = 0;
     Nop();
-    //LATF=0;    
-    //TRISC=0XFFFF;
-//    Nop();
+    TRISC=0;
+    Nop();
+    TRISCbits.TRISC13 = 0;
+    Nop();
+    TRISCbits.TRISC14= 1;    
+    Nop();
     
     //Deshabilitamos analogico digital
     ADPCFG=0XFFFF;    

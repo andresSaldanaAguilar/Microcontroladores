@@ -1,126 +1,162 @@
-;/**@brief ESTE PROGRAMA LEE LOS VALORES COLOCADOS EN EL PUERTO D
-; * (RD3, RD2, RD2, RD0) MEDIANTE UN DIP-SWITCH Y LOS COLOCA EN EL 
-; * PUERTO B (RB3, RB2, RB1, RB0) DONDE SE TIENEN CONECTADOS LEDS
-; * PARA VISUALIZAR LA SALIDA
-; * @device: DSPIC30F4013
-; */
-        .equ __30F4013, 1
-	;.EQU RS_LCD,	R0
-	;.EQU RW_LCD,	R1
-	;.EQU E_LCD,	R2
-        .include "p30F4013.inc"
+	.include    "p30F4013.inc"
+	.EQU	    RS_LCD,	RD0
+	.EQU	    RW_LCD,	RD1
+	.EQU	    E_LCD,	RD2
+	.EQU	    B_FLAG,	RB7
+	
 	.global	_comandoLCD
-	.global _datoLCD
-	.global _busyFlagLCD
+	.global	_datoLCD
+	.global	_busyFlagLCD
 	.global _iniLCD8bits
 	.global _imprimeLCD
-	.global _buscaNota
 
-;/**@brief ESTA RUTINA MUESTRA UN MENSAJE EN LA LCD
-; * @param W0, APUNTADOR DEL MENSAJE A MOSTRAR
-; */
-_imprimeLCD:
-    MOV	    W0,	    W1
-    CLR	    W0
-RECORRER:
-    MOV.B   [W1++], W0 ;en W0 tendremos el parametro y en w1 el apuntador al incio del arreglo
-    CP0.B   W0
-    BRA	    Z, SALIR
+;******************************************************************************
+;DESCRICION:	ESTA RUTINA RECORRE UN ARREGLO DECLARADO EN MEMORIA Y VA IMPRIMIENDO
+;		LOS CARACTERES HASTA QUE ENCUENTRA EL TERMINADOR DE CADENA
+;PARAMETROS: 	NINGUNO
+;RETORNO: 		NINGUNO
+;******************************************************************************
+_imprimeLCD:   
+    MOV	    W0,		W1
+    
+_nomover:
+    MOV.B   [W1++],	W0
+    AND	    #0x00FF,	W0
+    CP0	    W0
+    BRA	    Z,	    _SALIR
+    
     CALL    _busyFlagLCD
     CALL    _datoLCD
-    GOTO    RECORRER
-SALIR:
+    
+    GOTO    _nomover
+    
+    
+_SALIR:    
     RETURN
 	
-;/**@brief ESTa rutina veririca la bandera BF del lcd
-; */	RUTINA DE INICIALIZACIPON DE LCD
+;******************************************************************************
+;DESCRICION:	ESTA RUTINA INICIALIZA LA PANTALLA LCD
+;PARAMETROS: 	NINGUNO
+;RETORNO: 		NINGUNO
+;******************************************************************************
 _iniLCD8bits:
-    PUSH    W0
+	PUSH W0
     
-    CALL    _RETARDO_30ms
-    MOV	    #0x30,	    W0
-    CALL    _comandoLCD
-    
-    CALL    _RETARDO_30ms
-    MOV	    #0x30,	    W0
-    CALL    _comandoLCD
-    
-    CALL    _RETARDO_30ms
-    MOV	    #0x30,	    W0
-    CALL    _comandoLCD
-    
-    CALL    _busyFlagLCD
-    MOV	    #0x38,	    W0
-    CALL    _comandoLCD
-    CALL    _busyFlagLCD
-    MOV	    #0x08,	    W0    
-    CALL    _comandoLCD
-    CALL    _busyFlagLCD    
-    MOV	    #0x01,	    W0  
-    CALL    _comandoLCD
-    CALL    _busyFlagLCD
-    MOV	    #0x06,	    W0  
-    CALL    _comandoLCD
-    CALL    _busyFlagLCD 
-    MOV	    #0x0F,	    W0  
-    CALL    _comandoLCD
-    
-    POP	    W0
-    RETURN 
+	CALL	_RETARDO_15ms
+	MOV	#0X0030,    W0
+	CALL	_comandoLCD
 	
-;/**@brief ESTa rutina veririca la bandera BF del lcd
-; */	
+	CALL	_RETARDO_15ms
+	MOV	#0X0030,    W0
+	CALL	_comandoLCD
+	
+	CALL	_RETARDO_15ms
+	MOV	#0X0030,    W0
+	CALL	_comandoLCD
+	
+	CALL	_busyFlagLCD
+	MOV	#0X0038,    W0
+	CALL	_comandoLCD
+	
+	CALL	_busyFlagLCD
+	MOV	#0X0008,    W0
+	CALL	_comandoLCD
+	
+	CALL	_busyFlagLCD
+	MOV	#0X0001,    W0
+	CALL	_comandoLCD
+	
+	CALL	_busyFlagLCD
+	MOV	#0X0006,    W0
+	CALL	_comandoLCD
+	
+	CALL	_busyFlagLCD
+	MOV	#0X000F,    W0
+	CALL	_comandoLCD
+
+	POP	W0
+	RETURN
+	
+;******************************************************************************
+;DESCRICION:	ESTA RUTINA REVISA LA BANDERA DE BUSY FLAG EN LA PANTALLA LCD
+;		Y TERMINA CUANDO ?STA SE DESACTIVA
+;PARAMETROS: 	NINGUNO
+;RETORNO: 		NINGUNO
+;******************************************************************************
+	
 _busyFlagLCD:
-    PUSH    W0
-    MOV	    #0X00FF,	W0
-    IOR	    TRISB	    ;Hace el or con w0 y lo guarda en trisb
-    NOP
-    BCLR    PORTD,	#RD0
-    NOP
-    BSET    PORTD,	#RD1
-    NOP
-    BSET    PORTD,	#RD2
-    NOP
-LOOP:
-    BTSC    PORTB,	#7  ;checando si esta ocupado o no el LCD
-    GOTO    LOOP
-    BCLR    PORTD,	#RD2
-    NOP
-    CLR	    W0
-    MOV	    #0XFF00,	W0
-    AND	    TRISB
-    NOP
-    BCLR    PORTD,	#RD1
-    NOP
-    POP	    W0
-    RETURN	
+	PUSH	W0
 	
-;/**@brief ESTa rutina manda comandos al lcd, w0 guarda el comando a enviar
-; */	
+	MOV	#0x00FF,    W0
+	IOR	TRISB
+	NOP
+	BCLR	PORTD,	    #RS_LCD
+	NOP
+	
+	BSET	PORTD,	    #RW_LCD
+	NOP
+	
+	BSET	PORTD,	    #E_LCD
+	NOP
+	
+WAIT:
+	BTST	PORTB,	    #B_FLAG
+	BRA	Z,	    CONTINUE
+	GOTO	WAIT
+	
+CONTINUE:
+	
+	BCLR	PORTD,	    #E_LCD
+	NOP
+	
+	;ULTIMA PARTE DE LA RUTINA DE BUSY FLAG
+	PUSH	W0
+	MOV	#0XFF00,    W0
+	AND	TRISB
+	BCLR	PORTD,	    #RW_LCD
+	POP	W0
+	;
+	
+	POP	W0
+	
+	RETURN
+	
+;******************************************************************************
+;DESCRICION:	ESTA RUTINA EJECUTA UN COMANDO DENTRO DE LA LCD, EL COMANDO 
+;		DEBE ESTAR GUARDADO DENTRO DEL REGISTRO W0
+;PARAMETROS: 	NINGUNO
+;RETORNO: 		NINGUNO
+;******************************************************************************
 _comandoLCD:
-    BCLR    PORTD, #RD0
-    NOP
-    BCLR    PORTD,  #RD1
-    NOP
-    BSET    PORTD,  #RD2
-    NOP
-    MOV.B   WREG,   PORTB
-    NOP
-    BCLR    PORTD,  #RD2
-    NOP
-    RETURN
-  
+	BCLR	PORTD,	#RS_LCD
+	NOP
+	BCLR	PORTD,	#RW_LCD
+	NOP
+	BSET	PORTD,	#E_LCD
+	NOP
+	MOV.B	WREG,	PORTB
+	NOP
+	BCLR	PORTD,	#E_LCD
+	NOP
+	
+	RETURN
+	
+;******************************************************************************
+;DESCRICION:	ESTA RUTINA PERMITE ESCRIBIR CARACTERES DENTRO DE LA PANTALLA LCD
+;PARAMETROS: 	NINGUNO
+;RETORNO: 		NINGUNO
+;******************************************************************************
 _datoLCD:
-    BSET    PORTD, #RD0
-    NOP
-    BCLR    PORTD,  #RD1
-    NOP
-    BSET    PORTD,  #RD2
-    NOP
-    MOV.B   WREG,   PORTB
-    NOP
-    BCLR    PORTD,  #RD2
-    NOP
-    RETURN
-    
- 
+	BSET	PORTD,	#RS_LCD
+	NOP
+	BCLR	PORTD,	#RW_LCD
+	NOP
+	BSET	PORTD,	#E_LCD
+	NOP
+	MOV.B	WREG,	PORTB
+	NOP
+	BCLR	PORTD,	#E_LCD
+	NOP
+	
+	RETURN
+	
