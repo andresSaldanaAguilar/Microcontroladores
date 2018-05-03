@@ -93,8 +93,8 @@ void imprimeLCD (char msj[]);
 void config( void );
 
 
-int datoRCV,dato;
-
+unsigned char datoRCV;
+unsigned char dato[] = "hola";
 
 int main (void)
 {   
@@ -106,16 +106,16 @@ int main (void)
     config();
     //interrupciones
     iniInterrupciones();
+    //disable cursor
+    comandoLCD(0xC);  
     
-    for(;;){
-        if(datoRCV){
+    for(;EVER;){
+        if(datoRCV == 1){
            busyFlagLCD();
-           datoLCD(dato);
+           imprimeLCD(dato);
            datoRCV = 0;
         }
-        else continue;
-    }    
-     
+    }      
     return 0;
 }
 
@@ -168,8 +168,6 @@ void iniPerifericos( void )
     PORTC = 0;
     Nop();
     LATC = 0;
-    Nop();
-    TRISC=0;
     Nop();
     TRISCbits.TRISC13 = 0;
     Nop();

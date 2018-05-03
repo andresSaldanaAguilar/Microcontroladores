@@ -10,14 +10,14 @@
     
 __U1RXInterrupt:
     PUSH W0
-    MOV  U1RXREG
-    MOV  _dato ;solucionar problema
-    BSET _datoRCV, #0
-    BCLR  IFS0, #U1RXIF ;Careful
+    MOV  U1RXREG,W0
+    MOV  W0,	 _dato
+    MOV  #1,	 W0
+    MOV  W0,	 _datoRCV
+    BCLR IFS0,	 #U1RXIF
     POP  W0
     RETFIE
-    
-    
+
 
     
     
