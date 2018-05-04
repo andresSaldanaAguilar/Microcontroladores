@@ -1,8 +1,8 @@
     
     .include "p30F4013.inc"
-    .GLOBAL __U1RXInterrupt
-    .GLOBAL _datoRCV
-    .GLOBAL _dato
+    .global __U1RXInterrupt
+    .global _datoRCV
+    .global _dato
     
 ;/**@brief Esta rutina cacha una interrupcion uart
 ; * @param
