@@ -11,9 +11,9 @@
 __U1RXInterrupt:
     PUSH W0
     MOV  U1RXREG,W0
-    MOV  W0,	 _dato
+    MOV.B  WREG,	 _dato
     MOV  #1,	 W0
-    MOV  W0,	 _datoRCV
+    MOV.B  WREG,	 _datoRCV
     BCLR IFS0,	 #U1RXIF
     POP  W0
     RETFIE

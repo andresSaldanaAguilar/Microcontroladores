@@ -107,7 +107,7 @@ int main (void)
     //interrupciones
     iniInterrupciones();
     //disable cursor
-    comandoLCD(0xC);  
+    comandoLCD(0x0C);  
     
     for(;EVER;){
         if(datoRCV == 1){
