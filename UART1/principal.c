@@ -94,7 +94,7 @@ void config( void );
 
 
 unsigned char datoRCV;
-unsigned char dato[] = "hola";
+char dato[] = "hola";
 
 int main (void)
 {   
