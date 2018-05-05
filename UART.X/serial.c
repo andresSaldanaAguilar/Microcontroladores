@@ -29,6 +29,7 @@ int main()
 		scanf("%c",&dato);
 		//read ( fd_serie, &dato, 1 );
 		//printf("%c", dato);
+		
 		write( fd_serie, &dato, 1 );
 		//sleep(1);
 	}
