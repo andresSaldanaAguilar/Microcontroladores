@@ -94,7 +94,7 @@ void config( void );
 
 
 unsigned char datoRCV;
-unsigned char dato[] = "hola";
+char dato[] = "hola";
 
 int main (void)
 {   
@@ -107,7 +107,7 @@ int main (void)
     //interrupciones
     iniInterrupciones();
     //disable cursor
-    comandoLCD(0x0C);  
+    comandoLCD(0xC);//Aquí decía 0X0C
     
     for(;EVER;){
         if(datoRCV == 1){
