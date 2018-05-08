@@ -82,28 +82,8 @@ int var1 __attribute__ ((near));
 
 //Inicialización
 void iniPerifericos( void );
-void iniInterrupciones( void );
-
-//LCD
-void desplazaVentana(void);
-short int CONV_CODIGO( short int codigo);
-extern void iniLCD8bits( void );
-extern void datoLCD( unsigned char );
-extern void busyFlagLCD( void );
-extern void comandoLCD( unsigned char );
-extern void imprimeLCD( char msj[] );
-
-//ENRTC
-extern void ENRTC(void);
-
-//Retardos
-extern void retardo1S(void);
-extern void RETARDO_HALFS( void );
 
 //Variables
-unsigned char datoRCV;
-unsigned char dato[] = "Hola"; 
-
 
 int main (void)
 {
@@ -111,7 +91,7 @@ int main (void)
     
     //TIMER 3
     T3CON = 0X0000; //preescala de 1 si son 1024
-    PR3 = 0X0400; //1024 
+    PR3 = 0X0200; //512
     TMR3 = 0;
     
     //UART BAUDIOS:19200
@@ -119,6 +99,12 @@ int main (void)
     U1STA = 0X8000;
     
     //ADC
+    ADCON1 = 0x0044;
+    ADCON2 = 0x6000;
+    ADCON3 = 0x0F02;
+    ADCHS  = 2;
+    ADPCFG = 0xFFF8;
+    ADCSSL = 0;
     
     //Interrupciones
     IFS0bits.T3IF = 0;
@@ -130,39 +116,16 @@ int main (void)
     T3CONbits.TON = 1;
     U1MODEbits.UARTEN = 1;
     U1STAbits.UTXEN = 1;
-    ADCON1bits.ADON = 1;
-    
-    
-    comandoLCD(0xC);
+    ADCON1bits.ADON = 1;   
       
     for(;EVER;)
     {        
-        if( datoRCV == 1 )
-        {
-            busyFlagLCD();            
-            imprimeLCD(dato);            
-            datoRCV = 0;
-        }
+        Nop();
     }
     
     return 0;
 }
 
-void desplazaVentana(){
-    comandoLCD(0x18);
-    RETARDO_HALFS();
-}
-/****************************************************************************/
-/* DESCRICION:	ESTA RUTINA INICIALIZA LAS INTERRPCIONES    				*/
-/* PARAMETROS: NINGUNO                                                      */
-/* RETORNO: NINGUNO															*/
-/****************************************************************************/
-void iniInterrupciones( void )
-{
-    //Habilitacion de interrupcion del periférico 1
-    //Habilitacion de interrupcion del periférico 2
-    //Habilitacion de interrupcion del periférico 3
-}
 /****************************************************************************/
 /* DESCRICION:	ESTA RUTINA INICIALIZA LOS PERIFERICOS						*/
 /* PARAMETROS: NINGUNO                                                      */
@@ -188,10 +151,3 @@ void iniPerifericos( void )
     TRISB = 0XFFFF;
     Nop();
 }
-
-/********************************************************************************/
-/* DESCRICION:	ISR (INTERRUPT SERVICE ROUTINE) DEL TIMER 1						*/
-/* LA RUTINA TIENE QUE SER GLOBAL PARA SER UNA ISR								*/	
-/* SE USA PUSH.S PARA GUARDAR LOS REGISTROS W0, W1, W2, W3, C, Z, N Y DC EN LOS */
-/* REGISTROS SOMBRA																*/
-/********************************************************************************/
