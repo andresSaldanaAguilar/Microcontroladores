@@ -90,9 +90,9 @@ int main (void)
     iniPerifericos();
     
     //TIMER 3
-    T3CON = 0X0000; //preescala de 1 si son 1024
+    T3CON = 0X0000; //preescala de 1 
     PR3 = 0X0200; //512
-    TMR3 = 0;
+    TMR3 = 0; 
     
     //UART BAUDIOS:19200
     U1MODE = 0X0420;
@@ -108,9 +108,9 @@ int main (void)
     
     //Interrupciones
     IFS0bits.T3IF = 0;
-    IEC0bits.T3IE = 1;
-    IFS0bits.ADIF = 0;
-    IEC0bits.ADIE = 1;
+    IEC0bits.T3IE = 1; //habilita interrupcion de timer 3
+    IFS0bits.ADIF = 0; 
+    IEC0bits.ADIE = 1; //habilita el convertidor AD
     
     //habilitacion de perifericos
     T3CONbits.TON = 1;

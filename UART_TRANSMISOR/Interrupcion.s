@@ -1,17 +1,24 @@
 	.include "p30F4013.inc"
-	.global  __U1RXInterrupt
-	.global  _datoRCV
-	.global  _dato
-	
-	
+	.global  __T3Interrupt
 
-__U1RXInterrupt:
-    PUSH	W0   
-    MOV		U1RXREG    ,	W0
-    MOV		W0	    ,	_dato
-    MOV		#1	    ,	W0
-    MOV		W0	    ,	_datoRCV 
-    BCLR	IFS0,	#U1RXIF   
-    POP		W0
+
+__T3Interrupt:
+    BTG LATD, #LAD0 ;para rectificar una frecuencia de de 256hz
+    NOP
+    BCLR IFS0, #T3IF
+    RETFIE
+    
+__ADCInterrupt:
+    MOV   ADCBUF0, W0
+    MOV	  W0,W1
+    AND	  #0x003F
+    PUSH  W0
+    LSR	  W1,#6,W0 
+    MOV   W0,W1
+    POP   W0
+    BSET  W1, #7
+    MOV   U1TXREF,W0
+    MOV   U1TXREF,W1
+    //IFS0,ADIF = 0;
     RETFIE
     
