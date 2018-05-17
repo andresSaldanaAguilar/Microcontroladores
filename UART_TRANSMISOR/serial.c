@@ -26,7 +26,8 @@ int main()
 	
 	for(i=0; i<N; i++)
 	{
-		read ( fd_serie, muestras[i], 1 );
+		read ( fd_serie, &dato, 1 );
+		muestras[i]=dato;
 		//printf("%c", dato);
 		//if(dato>31)
 			//write( fd_serie, &dato, 1 );
