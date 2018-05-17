@@ -95,6 +95,7 @@ int main (void)
     TMR3 = 0; 
     
     //UART BAUDIOS:19200
+    U1BRG = 5; // (1.8432*10^6)/(16*19200) = 5
     U1MODE = 0X0420;
     U1STA = 0X8000;
     
