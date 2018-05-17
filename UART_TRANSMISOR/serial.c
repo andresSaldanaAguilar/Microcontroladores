@@ -26,6 +26,7 @@ int main()
 	
 	for(i=0; i<N; i++)
 	{
+		//No sé si aquí vaya algo más
 		read ( fd_serie, &dato, 1 );
 		muestras[i]=dato;
 		//printf("%c", dato);
