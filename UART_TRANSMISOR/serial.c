@@ -27,20 +27,25 @@ int main()
 	for(i=0; i<N; i++)
 	{
 		//No sé si aquí vaya algo más
-		read ( fd_serie, &dato, 1 );
-		muestras[i]=dato;
-		//printf("%c", dato);
+		//read ( fd_serie, &dato, 1 );
+		if(dato & 0X0080){
+			muestras[i++]+=dato;
+		}
+		else{
+			muestras[i]=dato;
+		}
 		//if(dato>31)
 			//write( fd_serie, &dato, 1 );
 		//sleep(1);
 	}
+	printf("Ya acabe");
 	close( fd_serie );
 	FILE *archivo_muestras=fopen("muestras.txt","w");
 	//Lo de aquí no estoy muy seguro, igual puede hacerce en un for
-	//for(i=0;i<N,i++){
-	//	fprintf(archivo_muestras,"%d\n",muestras[i]);
-	//}
-	fwrite(muestras,sizeof(unsigned char), N, archivo_muestras);
+	for(i=0;i<N;i++){
+		fprintf(archivo_muestras,"%x\n",muestras[i]);
+	}
+	// fwrite(muestras,sizeof(unsigned char), N, archivo_muestras);
 	fclose(archivo_muestras);
 	return 0;
 }
