@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define N  1024
+#define N  2048
 #define EVER 1
 
 int config_serial ( char *, speed_t );
@@ -17,27 +17,29 @@ int main()
 	register int i;
 	int fd_serie;
 	unsigned char dato;
-	unsigned short int tempL, tempH, temp;
+	unsigned short muestras[N];
 
 	fd_serie = config_serial( "/dev/ttyUSB0", B9600 );
 	printf("serial abierto con descriptor: %d\n", fd_serie);
 
 	//Leemos N datos del UART
-		dato = 0x55;
-	for( ; EVER; )
+	int i;
+	for(i=0; i<N; i++)
 	{
-		scanf("%c",&dato);
-		if(&dato == '\n'){
-		}
-		else{
-		//read ( fd_serie, &dato, 1 );
+		read ( fd_serie, muestras[i], 1 );
 		//printf("%c", dato);
-		write( fd_serie, &dato, 1 );
+		//if(dato>31)
+			//write( fd_serie, &dato, 1 );
 		//sleep(1);
-		}
 	}
 	close( fd_serie );
-
+	FILE *archivo_muestras=fopen("muestras.txt","w");
+	//Lo de aquí no estoy muy seguro, igual puede hacerce en un for
+	//for(i=0;i<N,i++){
+	//	fprintf(archivo_muestras,"%d\n",muestras[i]);
+	//}
+	fwrite(muestras,sizeof(unsigned char), N, archivo_muestras);
+	fclose(archivo_muestras);
 	return 0;
 }
 
