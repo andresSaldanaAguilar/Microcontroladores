@@ -14,7 +14,7 @@ int config_serial ( char *, speed_t );
 
 int main()
 {
-	register int i;
+	int i;
 	int fd_serie;
 	unsigned char dato;
 	unsigned short muestras[N];
@@ -23,7 +23,7 @@ int main()
 	printf("serial abierto con descriptor: %d\n", fd_serie);
 
 	//Leemos N datos del UART
-	int i;
+	
 	for(i=0; i<N; i++)
 	{
 		read ( fd_serie, muestras[i], 1 );
