@@ -91,7 +91,7 @@ int main (void)
     
     //TIMER 3
     T3CON = 0X0000; //preescala de 1 
-    PR3 = 0X0200; //512
+    PR3 = 0X3600; //512
     TMR3 = 0; 
     
     //UART BAUDIOS:19200
