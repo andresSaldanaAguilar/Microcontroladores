@@ -101,7 +101,7 @@ int main (void)
     
     //ADC
     ADCON1 = 0x0044;
-    ADCON2 = 0x6000;
+    ADCON2 = 0x0000;
     ADCON3 = 0x0F02;
     ADCHS  = 2;
     ADPCFG = 0xFFF8;
@@ -120,7 +120,8 @@ int main (void)
     ADCON1bits.ADON = 1;   
       
     for(;EVER;)
-    {        
+    { 
+        Sleep();
         Nop();
     }
     
