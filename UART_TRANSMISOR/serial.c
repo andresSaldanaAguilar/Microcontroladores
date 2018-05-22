@@ -27,7 +27,7 @@ int main()
 	for(i=0; i<N; i++)
 	{
 		//No sé si aquí vaya algo más
-		//read ( fd_serie, &dato, 1 );
+		read ( fd_serie, &dato, 1 );
 		if(dato & 0X0080){
 			muestras[i++]+=dato;
 		}
