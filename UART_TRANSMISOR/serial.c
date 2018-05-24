@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define N  512
+#define N  4096
 #define EVER 1
 
 int config_serial ( char *, speed_t );
