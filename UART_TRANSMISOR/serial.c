@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define N  2048
+#define N  4096
 #define EVER 1
 
 int config_serial ( char *, speed_t );
@@ -17,34 +17,40 @@ int main()
 	int i;
 	int fd_serie;
 	unsigned char dato;
-	unsigned short muestras[N];
-
-	fd_serie = config_serial( "/dev/ttyUSB0", B9600 );
+	unsigned short muestras[N], otro;
+	
+	fd_serie = config_serial( "/dev/ttyUSB0", B19200 );
 	printf("serial abierto con descriptor: %d\n", fd_serie);
 
 	//Leemos N datos del UART
 	
-	for(i=0; i<N; i++)
-	{
-		//No sé si aquí vaya algo más
+	// for(i=0; i<N; i++)
+	// {
+	// 	read ( fd_serie, &dato, 1 );
+	// 	if(dato & 0X0080){
+	// 		muestras[i++]+=dato;
+	// 	}
+	// 	else{
+	// 		muestras[i]=dato;
+	// 	}
+	// }
+	FILE *archivo_muestras=fopen("muestras.txt","w");
+	for(i=0;i<N;i++){
 		read ( fd_serie, &dato, 1 );
 		if(dato & 0X0080){
-			muestras[i++]+=dato;
+			//muestras[i]|=dato<<6;
+			otro|=(dato & 0X003F)<<6;
+			muestras[i]=otro;
+			fprintf(archivo_muestras,"%d\n",muestras[i]);
+			// printf("%d\n",muestras[i]);
+		}else{
+			otro=dato;
+			//muestras[i]=dato;
+			// printf("Baja:%d\n",otro);
 		}
-		else{
-			muestras[i]=dato;
-		}
-		//if(dato>31)
-			//write( fd_serie, &dato, 1 );
-		//sleep(1);
 	}
-	printf("Ya acabe");
+	printf("Ya acabe\n");
 	close( fd_serie );
-	FILE *archivo_muestras=fopen("muestras.txt","w");
-	//Lo de aquí no estoy muy seguro, igual puede hacerce en un for
-	for(i=0;i<N;i++){
-		fprintf(archivo_muestras,"%x\n",muestras[i]);
-	}
 	// fwrite(muestras,sizeof(unsigned char), N, archivo_muestras);
 	fclose(archivo_muestras);
 	return 0;
