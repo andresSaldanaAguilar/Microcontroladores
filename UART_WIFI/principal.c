@@ -88,7 +88,12 @@ void RETARDO_1S( void );
 void comandoAT(char msj[]);
 
 char RST[] = {'A','T','+','R','S','T',13,10,0};
-
+char CWMODE[] = {'A','T','+','C','W','M','O','D','E','=','1',13,10,0};
+char CIPMUX[] = {'A','T','+','C','I','P','M','U','X','=','0',13,10,0};
+char CWJAP[] = {'A','T','+','C','W','J','A','P','=','\"','W','I','F','I','i','p','n','\"',',','\"','\"',13,10,0};
+char CIFSR[] = {'A','T','+','C','I','F','S','R',13,10,0};
+char CIPSTART[] = {'A','T','+','C','I','P','S','T','A','R','T','=','\"','T','C','P','\"',',','\"','1','2','7','.','0','.','0','.','1','\"',',','8','0','0','0',13,10,0};
+char CIPSEND[] = {'A','T','+','C','I','P','S','E','N','D','=','4',13,10,0};
 
 //Variables
 
@@ -106,13 +111,14 @@ int main (void)
     U2MODE = 0X0020; //uart disable,no usa los alternos, autobaudaje??
     U2STA  = 0X8000;
     
-    //Interrupciones
+    //Interrupciones de uart2
     IFS1bits.U2RXIF= 0;
     IEC1bits.U2RXIE= 1;
     
     iniWIFI();
     configWIFI();
     
+    //Habilitamos el uart1 y uart2
     U1MODEbits.UARTEN = 1;
     U2MODEbits.UARTEN = 1;
 
@@ -179,7 +185,12 @@ void iniWIFI(void){
 
 void configWIFI(void){
     comandoAT(RST);
-    
+    comandoAT(CWMODE);
+    comandoAT(CIPMUX);
+    comandoAT(CWJAP);
+    comandoAT(CIFSR);
+    comandoAT(CIPSTART);
+    comandoAT(CIPSEND);    
 }
 
 
