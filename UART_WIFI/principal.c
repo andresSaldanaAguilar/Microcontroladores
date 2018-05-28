@@ -82,6 +82,13 @@ int var1 __attribute__ ((near));
 
 //Inicialización
 void iniPerifericos( void );
+void iniWIFI(void);
+void configWIFI(void);
+void RETARDO_1S( void );
+void comandoAT(char msj[]);
+
+char RST[] = {'A','T','+','R','S','T',13,10,0};
+
 
 //Variables
 
@@ -89,30 +96,31 @@ int main (void)
 {
     iniPerifericos();
     
-    //TIMER 3
-    /*T3CON = 0X0000; //preescala de 1 
-    PR3 = 3600; //512
-    TMR3 = 0; */
-    
     //UART1 BAUDIOS:115200
     U1BRG  = 0; // (1.8432*10^6)/(16*115200) = 0
     U1MODE = 0X0420; //uart disable, usa los alternos, autobaudaje
     U1STA  = 0X8000;
     
-    //UART BAUDIOS:115200
+    //UART2 BAUDIOS:115200
     U2BRG  = 0; // (1.8432*10^6)/(16*115200) = 0
-    U2MODE = 0X0420; //uart disable, usa los alternos, autobaudaje
+    U2MODE = 0X0020; //uart disable,no usa los alternos, autobaudaje??
     U2STA  = 0X8000;
     
     //Interrupciones
-
+    IFS1bits.U2RXIF= 0;
+    IEC1bits.U2RXIE= 1;
     
-    //habilitacion de perifericos
-    T3CONbits.TON = 1;
+    iniWIFI();
+    configWIFI();
+    
     U1MODEbits.UARTEN = 1;
-    U1STAbits.UTXEN = 1;
-    ADCON1bits.ADON = 1;   
-      
+    U2MODEbits.UARTEN = 1;
+
+    U2TXREG = 'H';
+    U2TXREG = 'O';
+    U2TXREG = 'L';
+    U2TXREG = 'A';
+    
     for(;EVER;)
     { 
         Nop();
@@ -133,26 +141,45 @@ void iniPerifericos( void )
     Nop();
     LATC = 0;
     Nop();
-    TRISCbits.TRISC13 = 0;
-    Nop();
+    //TRISCbits.TRISC13 = 0;
+    //Nop();
     TRISCbits.TRISC14 = 1;
     Nop();
     
-    //Perfifericos B
-    PORTB = 0;
-    Nop();
-    LATB = 0;
-    Nop();
-    TRISB = 0XFFFF;
-    Nop();
-    
     //Perifericos F
-    TRISFbits.TRISF5 = 0; //U2TX
+    TRISFbits.TRISF5 = 1; //U2RX
     Nop();
-    TRISFbits.TRISF4 = 0; //U2RX
+    TRISFbits.TRISF4 = 0; //U2TX
     Nop();
     PORTF = 0;
     Nop();
     LATF = 0;
     Nop();
 }
+
+void iniWIFI(void){
+    PORTBbits.RB8 = 1;
+    
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    
+    PORTDbits.RD1 = 1;
+    
+    RETARDO_1S();
+    
+    PORTDbits.RD1 = 0;
+    
+    RETARDO_1S();
+
+    PORTDbits.RD1 = 1; 
+    
+    RETARDO_1S();  
+}
+
+void configWIFI(void){
+    comandoAT(RST);
+    
+}
+
+
