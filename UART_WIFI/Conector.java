@@ -11,7 +11,7 @@ public class Conector{
     private DataInputStream entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
-    final short puerto=9000;
+    final short puerto=9001;
     public Conector(){
         try{
             //Establecemos la conexion
@@ -23,6 +23,18 @@ public class Conector{
             salida=new DataOutputStream(socket.getOutputStream());
         }catch(Exception e){
             System.out.println("Hubo en error en el socket server: "+e);
+        }
+    }
+    public Conector(String ip){
+        try{
+            //Establecemos la conexion
+            socket=new Socket(ip,this.puerto);
+            //Declaramos a los objetos para el manejo de Inputs y Outputs
+            entradaSocket=new DataInputStream(socket.getInputStream());
+            //entrada=new BufferedReader(entradaSocket);
+            salida=new DataOutputStream(socket.getOutputStream());
+        }catch(Exception e){
+            System.out.println("Hubo en error en el socket: "+e);
         }
     }
     public void enviarMensaje(String mensaje){
