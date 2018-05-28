@@ -39,14 +39,24 @@ public class Conector{
     }
     public void enviarMensaje(String mensaje){
         try{
+            //byte a=2;
             salida.writeUTF(mensaje);
+            //salida.writeUTF(mensaje);
         }catch(Exception e){
             System.out.println("Error al enviar el mensaje: "+e);
         }
     }
     public String recibirMensaje(){
         try{
+            //byte[] a =new byte[4];
+            //a[0]=entradaSocket.readByte();
+            //a[1]=entradaSocket.readByte();
+            //a[2]=entradaSocket.readByte();
+            //a[3]=entradaSocket.readByte();
+            //return a;
             return entradaSocket.readUTF();
+            //return Character.toString((char)Byte.toString(entradaSocket.readByte()));
+            //return Character.toString((char)entradaSocket.readByte());
         }catch(Exception e){
             System.out.println("Error al leer el mensaje: "+e);
             return null;

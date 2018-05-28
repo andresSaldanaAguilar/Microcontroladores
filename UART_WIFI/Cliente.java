@@ -6,8 +6,9 @@ public class Cliente{
         while(mensaje!=null){
             mensaje = System.console().readLine();
             cliente.enviarMensaje(mensaje);
-            mensaje=cliente.recibirMensaje();
-            System.out.println(mensaje);
+            mensaje="";
+            //mensaje=cliente.recibirMensaje();
+            //System.out.println(mensaje);
         }
     }
 }
