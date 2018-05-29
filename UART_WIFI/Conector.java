@@ -11,7 +11,7 @@ public class Conector{
     private DataInputStream entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
-    final short puerto=9001;
+    final short puerto=8000;
     public Conector(){
         try{
             //Establecemos la conexion

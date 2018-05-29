@@ -26,11 +26,11 @@ int main()
 		dato = 0x42;
 	for( ; EVER; )
 	{
-		scanf("%c",&dato);
-		//read ( fd_serie, &dato, 1 );
-		//printf("%c", dato);
-		if(dato>31)
-			write( fd_serie, &dato, 1 );
+		//scanf("%c",&dato);
+		read ( fd_serie, &dato, 1 );
+		printf("%c", dato);
+		// if(dato>31)
+		// 	write( fd_serie, &dato, 1 );
 		//sleep(1);
 	}
 	close( fd_serie );
