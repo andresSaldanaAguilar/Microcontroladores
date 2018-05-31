@@ -46,15 +46,15 @@ public class Conector{
             System.out.println("Error al enviar el mensaje: "+e);
         }
     }
-    public String recibirMensaje(){
+    public byte[] recibirMensaje(){
         try{
-            //byte[] a =new byte[4];
-            //a[0]=entradaSocket.readByte();
+            byte[] a =new byte[4];
+            int leidos = entradaSocket.read(a);
             //a[1]=entradaSocket.readByte();
             //a[2]=entradaSocket.readByte();
             //a[3]=entradaSocket.readByte();
-            //return a;
-            return entradaSocket.readUTF();
+            return a;
+            // return entradaSocket.readUTF();
             //return Character.toString((char)Byte.toString(entradaSocket.readByte()));
             //return Character.toString((char)entradaSocket.readByte());
         }catch(Exception e){

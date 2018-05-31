@@ -3,12 +3,9 @@
 
 
 __U2RXInterrupt:
-    PUSH    W0
     MOV	    U2RXREG, W0
     MOV	    W0, U1TXREG
-    NOP
-    BCLR    IFS1, #U2RXIF
-    POP	    W0
+    BCLR    IFS1, #U2TXIF
     RETFIE
 
     
