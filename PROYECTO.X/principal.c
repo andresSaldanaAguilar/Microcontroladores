@@ -87,45 +87,52 @@ void configWIFI(void);
 void RETARDO_1S( void );
 void comandoAT(char msj[]);
 
-char RST[] = {'A','T','+','R','S','T',13,10,0};
-char CWMODE[] = {'A','T','+','C','W','M','O','D','E','=','1',13,10,0};
-char CIPMUX[] = {'A','T','+','C','I','P','M','U','X','=','0',13,10,0};
-char CWJAP[] = {'A','T','+','C','W','J','A','P','=','\"','W','I','F','I','i','p','n','\"',',','\"','\"',13,10,0};
-char CIFSR[] = {'A','T','+','C','I','F','S','R',13,10,0};
-char CIPSTART[] = {'A','T','+','C','I','P','S','T','A','R','T','=','\"','T','C','P','\"',',','\"','1','2','7','.','0','.','0','.','1','\"',',','8','0','0','0',13,10,0};
-char CIPSEND[] = {'A','T','+','C','I','P','S','E','N','D','=','4',13,10,0};
-
 //Variables
 
 int main (void)
 {
     iniPerifericos();
     
+    //TIMER 3
+    T3CON = 0X0000; //preescala de 1 
+    PR3 =   3600; //512
+    TMR3 =  0;
+    
     //UART1 BAUDIOS:115200
-    U1BRG  = 0; // (1.8432*10^6)/(16*115200) = 0
     U1MODE = 0X0420; //uart disable, usa los alternos, autobaudaje
     U1STA  = 0X8000;
+    U1BRG  = 0; // (1.8432*10^6)/(16*115200) = 0
     
     //UART2 BAUDIOS:115200
-    U2BRG  = 0; // (1.8432*10^6)/(16*115200) = 0
     U2MODE = 0X0020; //uart disable,no usa los alternos, autobaudaje??
     U2STA  = 0X8000;
+    U2BRG  = 0; // (1.8432*10^6)/(16*115200) = 0 
     
     //Interrupciones de uart2
     IFS1bits.U2RXIF= 0;
     IEC1bits.U2RXIE= 1;
     
+    //Interrupciones del TIMER3 y AD
+    IFS0bits.T3IF = 0;
+    IEC0bits.T3IE = 1; //habilita interrupcion de timer 3
+    IFS0bits.ADIF = 0; 
+    IEC0bits.ADIE = 1; //habilita el convertidor AD  
+    
+    //Habilitamos el uart1 y uart2
+    U2MODEbits.UARTEN = 1;
+    U2STAbits.UTXEN = 1;
+    U1MODEbits.UARTEN = 1;
+    U1STAbits.UTXEN = 1;
+    
+    //habilitacion de perifericos de TMR3 y AD
+    T3CONbits.TON = 1;
+    ADCON1bits.ADON = 1; 
+    
+    
+    
     iniWIFI();
     configWIFI();
     
-    //Habilitamos el uart1 y uart2
-    U1MODEbits.UARTEN = 1;
-    U2MODEbits.UARTEN = 1;
-
-    U2TXREG = 'H';
-    U2TXREG = 'O';
-    U2TXREG = 'L';
-    U2TXREG = 'A';
     
     for(;EVER;)
     { 
@@ -142,55 +149,110 @@ int main (void)
 /****************************************************************************/
 void iniPerifericos( void )
 {   
-    //Perifericos C
+    PORTB = 0;
+    Nop();
+    LATB = 0;
+    Nop();
+    
     PORTC = 0;
     Nop();
     LATC = 0;
     Nop();
-    //TRISCbits.TRISC13 = 0;
-    //Nop();
-    TRISCbits.TRISC14 = 1;
+    
+    PORTD = 0;
+    Nop();
+    LATD = 0;
     Nop();
     
-    //Perifericos F
-    TRISFbits.TRISF5 = 1; //U2RX
-    Nop();
-    TRISFbits.TRISF4 = 0; //U2TX
-    Nop();
     PORTF = 0;
     Nop();
     LATF = 0;
+    Nop();
+    
+    //Entradas
+    TRISCbits.TRISC14 = 1;
+    Nop();
+    TRISFbits.TRISF5 = 1;
+    Nop();
+    
+    //Salidas
+    TRISCbits.TRISC13 = 0;
+    Nop();
+    TRISFbits.TRISF4 = 0;
+    Nop();
+    TRISBbits.TRISB8 = 0;
+    Nop();
+    TRISDbits.TRISD1 = 0;
     Nop();
 }
 
 void iniWIFI(void){
     PORTBbits.RB8 = 1;
+    Nop();
     
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
     
     PORTDbits.RD1 = 1;
+    Nop();
     
     RETARDO_1S();
     
     PORTDbits.RD1 = 0;
+    Nop();
     
     RETARDO_1S();
 
     PORTDbits.RD1 = 1; 
+    Nop();
     
     RETARDO_1S();  
 }
 
 void configWIFI(void){
-    comandoAT(RST);
-    comandoAT(CWMODE);
-    comandoAT(CIPMUX);
-    comandoAT(CWJAP);
-    comandoAT(CIFSR);
-    comandoAT(CIPSTART);
-    comandoAT(CIPSEND);    
+    comandoAT("AT+RST\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CWMODE=3\r\n"); 
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CIPMUX=0\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CWJAP=\"Tenda_06DEC0\",\"MqZe5RY4\"\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CIFSR\r\n"); 
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.157\",7200\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    comandoAT("AT+CIPSEND=4\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();   
 }
 
 

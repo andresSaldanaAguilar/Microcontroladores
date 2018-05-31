@@ -87,14 +87,6 @@ void configWIFI(void);
 void RETARDO_1S( void );
 void comandoAT(char msj[]);
 
-char RST[]      = {'A','T','+','R','S','T',13,10,0};
-char CWMODE[]   = {'A','T','+','C','W','M','O','D','E','=','1',13,10,0};
-char CIPMUX[]   = {'A','T','+','C','I','P','M','U','X','=','0',13,10,0};
-char CWJAP[]    = {'A','T','+','C','W','J','A','P','=','\"','m','o','t','o','x','\"',',','\"','1','2','3','4','5','6','7','8','\"',13,10,0};
-char CIFSR[]    = {'A','T','+','C','I','F','S','R',13,10,0};
-char CIPSTART[] = {'A','T','+','C','I','P','S','T','A','R','T','=','\"','T','C','P','\"',',','\"','1','2','7','.','0','.','0','.','1','\"',',','8','0','0','0',13,10,0};
-char CIPSEND[]  = {'A','T','+','C','I','P','S','E','N','D','=','4',13,10,0};
-
 //Variables
 
 int main (void)
@@ -210,6 +202,12 @@ void iniWIFI(void){
 }
 
 void configWIFI(void){
+    comandoAT("ATE0\r\n");
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
+    RETARDO_1S();
     comandoAT("AT+RST\r\n");
     RETARDO_1S();
     RETARDO_1S();
@@ -228,7 +226,7 @@ void configWIFI(void){
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CWJAP=\"Wi-Fi IPN\",\"\"\r\n");
+    comandoAT("AT+CWJAP=\"Tenda_06DEC0\",\"MqZe5RY4\"\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
@@ -240,7 +238,7 @@ void configWIFI(void){
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CIPSTART=\"TCP\",\"10.100.75.206\",8000\r\n");
+    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.157\",8000\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
