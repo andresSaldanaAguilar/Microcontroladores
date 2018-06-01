@@ -102,9 +102,9 @@ int main (void)
     //ADC
     ADCON1 = 0x0044;
     ADCON2 = 0x0000;
-    ADCON3 = 0x0F02;
+    ADCON3 = 0x0F02;    
     ADCHS  = 2;
-    ADPCFG = 0xFFF8;
+    ADPCFG = 0xFFF8;    
     ADCSSL = 0;
     
     //Interrupciones

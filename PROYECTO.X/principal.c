@@ -108,7 +108,15 @@ int main (void)
     U2STA  = 0X8000;
     U2BRG  = 0; // (1.8432*10^6)/(16*115200) = 0 
     
-    //Interrupciones de uart2
+    //ADC
+    ADCON1 = 0x0044;
+    ADCON2 = 0x0000;
+    ADCON3 = 0x0F02;
+    ADCHS  = 2;
+    ADPCFG = 0xFFF8;
+    ADCSSL = 0;
+    
+    //Interrupciones de uart2, recepcion
     IFS1bits.U2RXIF= 0;
     IEC1bits.U2RXIE= 1;
     
@@ -127,13 +135,10 @@ int main (void)
     //habilitacion de perifericos de TMR3 y AD
     T3CONbits.TON = 1;
     ADCON1bits.ADON = 1; 
-    
-    
-    
+
     iniWIFI();
     configWIFI();
-    
-    
+      
     for(;EVER;)
     { 
         Nop();
@@ -183,6 +188,14 @@ void iniPerifericos( void )
     TRISBbits.TRISB8 = 0;
     Nop();
     TRISDbits.TRISD1 = 0;
+    Nop();
+    
+    // ADC
+    //TRISBbits.TRISB0 = 1;
+    //Nop();
+    //TRISBbits.TRISB1 = 1;
+    //Nop();
+    TRISBbits.TRISB2 = 1;
     Nop();
 }
 
@@ -241,13 +254,13 @@ void configWIFI(void){
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.157\",7200\r\n");
+    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.157\",8000\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CIPSEND=4\r\n");
+    comandoAT("AT+CIPSEND=2048\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();

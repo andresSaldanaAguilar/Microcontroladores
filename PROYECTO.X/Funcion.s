@@ -1,5 +1,5 @@
-        .include "p30F4013.inc"
-	.global	_comandoAT
+.include "p30F4013.inc"
+.global	_comandoAT
 	
 ;/**@brief ESTA RUTINA MUESTRA UN MENSAJE EN LA LCD
 ; * @param W0, APUNTADOR DEL MENSAJE A MOSTRAR
