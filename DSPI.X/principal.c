@@ -88,6 +88,7 @@ void comandoAT(char msj[]);
 void iniInterrupciones( void );
 void WR_DAC(unsigned char);
 unsigned char cont;
+const unsigned short int seno[]={2048, 3946, 4096, 3496, 2048, 600, 0, 600};
 
 //Variables
 
