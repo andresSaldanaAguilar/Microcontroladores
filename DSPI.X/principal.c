@@ -85,17 +85,19 @@ void iniPerifericos( void );
 void configDSPI(void);
 void RETARDO_1S( void );
 void comandoAT(char msj[]);
-
+void iniInterrupciones( void );
+void WR_DAC(unsigned char);
+unsigned char cont;
 
 //Variables
 
 int main (void)
 {
     iniPerifericos();
-    configWIFI();
+    configDSPI();
     
-    SPI1CONbits.SPIEN=1;
-    int cont=0;
+    SPI1STATbits.SPIEN=1;
+    cont=0;
     
     for(;EVER;)
     { 
@@ -114,22 +116,38 @@ int main (void)
 /****************************************************************************/
 void iniPerifericos( void )
 {   
-    PORTAbits.TRISA11=1;
+    PORTA=0;
     Nop();
-    PORTDbits.TRISD0=1;
+    LATB=0;
     Nop();
-    PORTFbits.TRISF3=1;
+
+    PORTD=0;
     Nop();
-    PORTFbits.TRISF6=1;
+    LATD=0;
     Nop();
-    SPI1STAT=0;
+
+    PORTF=0;
     Nop();
-    SPI1CON=0X053F;
+    LATF=0;
+    Nop();
+
+    TRISAbits.TRISA11=0;
+    Nop();
+    TRISDbits.TRISD0=0;
+    Nop();
+    TRISFbits.TRISF3=0;
+    Nop();
+    TRISFbits.TRISF6=0;
+    Nop();
 }
 
 void configDSPI(void){
     SPI1STAT=0;
+    Nop();
     SPI1CON=0X053F;
+    Nop();
 }
 
-
+void iniInterrupciones( void )
+{
+}
