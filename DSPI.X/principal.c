@@ -99,7 +99,28 @@ int main (void)
     
     SPI1STATbits.SPIEN=1;
     cont=0;
+
+    //Configurar Timer 1
+    // Generar FCLK del filtro MAX295
+    //F=1KHZ
+    //fs=8khz
+    //fc=1152hz
+    //FCLK=50fc = 50*1152=57600
+    //FT1IF=FCLK*2=115200Hz
+
+    //Configurar Timer 3 (frecuencia de muestreo)
+    // Generar fs
+    //f=1KHZ
+    //fs=8khz
+    //FT1IF=fs=8kHz
+
+    //Configurar DAC
+    //Configurar interrupciones
+    //IFS0,T1IF
+    //IFS0,T3IF
     
+    configDSP();
+
     for(;EVER;)
     { 
         WR_DAC(cont);

@@ -1,12 +1,14 @@
         .include "p30F4013.inc"
 
         .global _RD_WR_SPI
-	.global _WR_DAC
+	    .global _WR_DAC
+        .global _configDSP
+        .global _seno
 	
 	.EQU	CS_DAC,	    RA11
 	.EQU	LDAC,	    RD0
 	
-/** @brief 
+/** @brief
 ; * @PARAM:
 ; */
 _RD_WR_SPI:
@@ -41,3 +43,11 @@ _WR_DAC:
     NOP
     POP W1
     RETURN
+
+
+/** @brief 
+; * @PARAM:
+; */
+_configDSP:
+    ;aquí va el código de la foto
+    ; cambiar ps_coeff por seno
