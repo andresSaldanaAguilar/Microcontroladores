@@ -72,7 +72,7 @@ extern void WR_DAC( unsigned char cont );
 extern void configDSP( unsigned short int sen[] );
 
 //VARIABLES
-unsigned char cont;
+int cont;
 
 int main (void)
 {

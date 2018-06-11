@@ -68,7 +68,7 @@ extern void RETARDO_1S(void);
 extern void WR_DAC( unsigned char cont );
 
 //VARIABLES
-unsigned char cont;
+int cont;
 unsigned char func;
 
 int main (void)
