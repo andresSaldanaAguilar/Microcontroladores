@@ -226,7 +226,7 @@ void configWIFI(void){
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CWJAP=\"Tenda_06DEC0\",\"MqZe5RY4\"\r\n");
+    comandoAT("AT+CWJAP=\"ARRIS-1892\",\"AA3ECEF9977CCAFA\"\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
@@ -238,7 +238,7 @@ void configWIFI(void){
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();
-    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.157\",8000\r\n");
+    comandoAT("AT+CIPSTART=\"TCP\",\"192.168.0.9\",8000\r\n");
     RETARDO_1S();
     RETARDO_1S();
     RETARDO_1S();

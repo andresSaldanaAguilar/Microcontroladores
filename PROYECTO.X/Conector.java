@@ -50,6 +50,7 @@ public class Conector{
         try{
             byte[] a =new byte[2048];
             int leidos = entradaSocket.read(a);
+            System.out.println(leidos);
             //a[1]=entradaSocket.readByte();
             //a[2]=entradaSocket.readByte();
             //a[3]=entradaSocket.readByte();
