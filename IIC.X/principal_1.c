@@ -93,14 +93,37 @@ void NACK_I2C(void);
 void ENVIA_DATO_I2C( unsigned int );
 unsigned int RECIBE_DATO_I2C( void );
 void enviaUART(unsigned char dato);
-
+int recieverRTCC( void );
+int transmitterRTCC( void );
 //Variables
 
 int main (void)
 {
     iniPerifericos();
+    
+    //UART BAUDIOS:19200
+    U1BRG = 5; // (1.8432*10^6)/(16*19200) = 5
+    U1MODE = 0X0420;
+    U1STA = 0X8000;
+    
     /*TODO: checar funciones de envio y recepcion, inicializacion de SDA y SCL*/
       
+    //Habilitacion de perifericos
+    U1MODEbits.UARTEN = 1;
+    U1STAbits.UTXEN = 1;
+    
+    U1TXREG = 'H';
+    U1TXREG ='O'; 
+    U1TXREG ='L';
+    U1TXREG ='A';
+    /*
+    //Metodos
+    int val = recieverRTCC();
+    if (val == 0){
+        enviaUART(0x00);
+    }
+    transmitterRTCC();
+    */
     for(;EVER;)
     { 
         Nop();
@@ -122,14 +145,27 @@ void iniPerifericos( void )
     Nop();
    
     //SCL
-    TRISFbits.TRISF3 = 1;
+    TRISFbits.TRISF3 = 0;
     Nop();
     //SDA
-    TRISFbits.TRISF2 = 1;
+    TRISFbits.TRISF2 = 0;
     Nop();
+    
+    //UART
+    PORTC = 0;
+    Nop();
+    LATC = 0;
+    Nop();
+    TRISCbits.TRISC13 = 0;
+    Nop();
+    TRISCbits.TRISC14 = 1;
+    Nop();
+    
+    ADPCFG = 0XFFFF;
+    
 }    
 
-unsigned char recieverRTCC()
+int recieverRTCC()
 {
     START_I2C();
     ENVIA_DATO_I2C(0XD0);
@@ -144,7 +180,16 @@ unsigned char recieverRTCC()
     ENVIA_DATO_I2C(0X15);
     if(I2CSTATbits.ACKSTAT == 1)
         return NANCK;
+    ENVIA_DATO_I2C(0X13);
+    if(I2CSTATbits.ACKSTAT == 1)
+        return NANCK;
     ENVIA_DATO_I2C(0X02);
+    if(I2CSTATbits.ACKSTAT == 1)
+        return NANCK;
+    ENVIA_DATO_I2C(0X18);
+    if(I2CSTATbits.ACKSTAT == 1)
+        return NANCK;
+    ENVIA_DATO_I2C(0X06);
     if(I2CSTATbits.ACKSTAT == 1)
         return NANCK;
     ENVIA_DATO_I2C(0X18);
@@ -157,7 +202,7 @@ unsigned char recieverRTCC()
     return EXITO; 
 }
 
-unsigned char transmitterRTCC()
+int transmitterRTCC()
 {
     unsigned char datoLeido;
     START_I2C();
@@ -167,13 +212,17 @@ unsigned char transmitterRTCC()
 
     /**Recibir n datos**/
     int i;
-    for(i = 0 ; i < 6 ; i++){
+    for(i = 0 ; i < 7 ; i++){
         datoLeido = RECIBE_DATO_I2C();
-        ACK_I2C();
+        if ( i!= 6){
+            ACK_I2C();
+        }else{
+            NACK_I2C();
+        }
         enviaUART(datoLeido);
     }
    
-    NACK_I2C();
+    
     STOP_I2C();
     return EXITO; 
 }
